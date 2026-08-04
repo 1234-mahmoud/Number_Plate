@@ -51,9 +51,6 @@ export default function VehicleRegistrationForm() {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 flex justify-center items-center px-4 py-10">
-      
-      
-      
       <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
         {/* Header */}
 

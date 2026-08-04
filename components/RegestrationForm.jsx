@@ -1,8 +1,10 @@
 "use client";
-
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Input from "@/utilites/Input";
+import { Eye, EyeOff } from "lucide-react";
+
 import api from "@/Services/api";
 
 export default function RegistrationForm() {
@@ -19,7 +21,8 @@ export default function RegistrationForm() {
 
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   // Handle input changes
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -33,30 +36,26 @@ export default function RegistrationForm() {
     e.preventDefault();
 
     try {
+      setLoading(true);
+
       const response = await api.post("/residents", formData);
 
-      setMessage(response.data.message || "Vehicle registered successfully.");
-
+      setMessage(response.data.message || "Account created successfully.");
       setMessageType("success");
 
-      // Clear form
       setFormData({
         name: "",
         email: "",
         password: "",
         phone: "",
         unitNumber: "",
-
         residentType: "",
       });
-
-      // Redirect to gate lookup page
-      setTimeout(() => {
-        router.push("/vehicle-lookup");
-      }, 1500);
     } catch (error) {
       setMessage(error.response?.data?.message || "Something went wrong.");
       setMessageType("error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,13 +65,15 @@ export default function RegistrationForm() {
         {/* Header */}
         <div className="bg-linear-to-r from-blue-600 to-indigo-700 text-white text-center py-8 px-5">
           <h2 className="text-3xl font-bold tracking-wide">
-            User Registration
+            Create Resident Account
           </h2>
 
-          <p className="mt-2 text-blue-100">Register a new resident.</p>
+          <p className="mt-2 text-blue-100">
+            Create your account before registering your vehicles.
+          </p>
         </div>
 
-        {/* Registration Form */}
+        {/* Form */}
         <form
           onSubmit={handleSubmit}
           className="flex flex-col items-center gap-6 px-8 py-10"
@@ -88,21 +89,63 @@ export default function RegistrationForm() {
 
           <Input
             name="email"
-            label_title="Email"
+            label_title="Email Address"
             input_type="email"
             placeholder="Enter Your Email"
             value={formData.email}
             handleCahnge={handleChange}
           />
 
-          <Input
-            name="password"
-            label_title="Password"
-            input_type="password"
-            placeholder="Enter the Password"
-            value={formData.password}
-            handleCahnge={handleChange}
-          />
+          {/* Password */}
+          <div className="w-full max-w-3xl flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6">
+            <label
+              htmlFor="password"
+              className="w-50 lg:text-right whitespace-nowrap text-gray-700 font-semibold tracking-wide"
+            >
+              Password
+            </label>
+
+            <div className="relative w-full">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter Password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                className="
+                w-full
+                rounded-xl
+                border
+                border-gray-300
+                bg-gray-50
+                px-4
+                py-3
+                pr-12
+                text-gray-800
+                text-base
+                outline-none
+                transition-all
+                duration-300
+                focus:border-blue-500
+                focus:bg-white
+                focus:ring-4
+                focus:ring-blue-200
+                hover:border-gray-400
+                shadow-sm
+              "
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+          </div>
 
           <Input
             name="phone"
@@ -123,21 +166,40 @@ export default function RegistrationForm() {
           />
 
           {/* Resident Type */}
-          <div className="w-full max-w-2xl flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6">
+          <div className="w-full max-w-3xl flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6">
             <label
               htmlFor="residentType"
-              className="w-44 text-gray-700 font-semibold"
+              className="w-50 lg:text-right whitespace-nowrap text-gray-700 font-semibold tracking-wide"
             >
               Resident Type
             </label>
 
             <select
-              required
               id="residentType"
               name="residentType"
               value={formData.residentType}
               onChange={handleChange}
-              className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-200"
+              required
+              className="
+              w-full
+              rounded-xl
+              border
+              border-gray-300
+              bg-gray-50
+              px-4
+              py-3
+              text-gray-800
+              text-base
+              outline-none
+              transition-all
+              duration-300
+              focus:border-blue-500
+              focus:bg-white
+              focus:ring-4
+              focus:ring-blue-200
+              hover:border-gray-400
+              shadow-sm
+            "
             >
               <option value="">Select Resident Type</option>
               <option value="owner">Owner</option>
@@ -145,20 +207,43 @@ export default function RegistrationForm() {
             </select>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
-            className="mt-6 w-full max-w-sm rounded-xl bg-blue-600 py-3.5 text-white text-lg font-semibold transition hover:bg-blue-700 hover:shadow-xl active:scale-95"
+            disabled={loading}
+            className="
+            mt-6
+            w-full
+            max-w-sm
+            rounded-xl
+            bg-blue-600
+            py-3.5
+            text-white
+            text-lg
+            font-semibold
+            transition-all
+            duration-300
+            hover:bg-blue-700
+            hover:shadow-xl
+            active:scale-95
+            disabled:opacity-70
+            disabled:cursor-not-allowed
+          "
           >
-            Register Vehicle
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
+
+          <Link
+            href="/login"
+            className="text-center text-blue-600 font-semibold hover:underline"
+          >
+            Already have an account? Login
+          </Link>
         </form>
 
-        {/* Status Message */}
         {message && (
           <div className="px-8 pb-8">
             <div
-              className={`rounded-xl p-4 text-center font-medium ${
+              className={`rounded-xl px-4 py-3 text-center font-medium ${
                 messageType === "success"
                   ? "bg-green-100 border border-green-300 text-green-700"
                   : "bg-red-100 border border-red-300 text-red-700"

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Camera, Car, UserPlus, CheckCircle, XCircle } from "lucide-react";
 import api from "@/Services/api";
 
 export default function VehicleLookup() {
@@ -16,6 +17,7 @@ export default function VehicleLookup() {
     try {
       setLoading(true);
       setMessage("");
+      setResident(null);
 
       const response = await api.get("/residents", {
         params: {
@@ -33,145 +35,129 @@ export default function VehicleLookup() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 flex justify-center items-center px-4 py-10">
-      <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
-
+    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 px-4 py-8 md:py-10">
+      <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl">
         {/* Header */}
-        <div className="bg-linear-to-r from-blue-600 to-indigo-700 text-white text-center py-8 px-5">
-          <h2 className="text-3xl font-bold">
+        <div className="bg-linear-to-r from-blue-600 to-indigo-700 px-6 py-8 text-center text-white md:px-8">
+          <h2 className="text-2xl font-bold md:text-3xl">
             Vehicle Verification
           </h2>
 
-          <p className="mt-2 text-blue-100">
-            Scan vehicle plate to verify resident.
+          <p className="mt-2 text-sm text-blue-100 md:text-base">
+            Security personnel can verify vehicles using the gate camera.
           </p>
         </div>
 
         {/* Camera Section */}
-        <div className="px-8 py-10 flex flex-col items-center">
+        <div className="px-5 py-8 md:px-8 md:py-10">
+          <div className="mx-auto flex w-full max-w-2xl flex-col items-center">
+            <div className="flex h-72 w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-slate-50">
+              <Camera className="h-16 w-16 text-gray-400 md:h-20 md:w-20" />
 
-          <div className="w-full max-w-lg h-64 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center">
+              <h3 className="mt-5 text-xl font-bold text-gray-800 md:text-2xl">
+                Camera Preview
+              </h3>
 
-            <div className="text-6xl">
-              📷
+              <p className="mt-2 px-4 text-center text-sm text-gray-500 md:text-base">
+                The gate camera will automatically detect the vehicle plate.
+              </p>
             </div>
 
-            <h3 className="text-xl font-semibold mt-4">
-              Camera Preview
-            </h3>
-
-            <p className="text-gray-500 mt-2 text-center">
-              Waiting for vehicle plate...
-            </p>
-
+            <button
+              onClick={handleCameraScan}
+              disabled={loading}
+              className="mt-8 w-full max-w-sm rounded-xl bg-blue-600 py-3.5 text-base font-semibold text-white transition hover:bg-blue-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-70 md:text-lg"
+            >
+              {loading ? "Scanning Vehicle..." : "Simulate Camera Scan"}
+            </button>
           </div>
-
-          <button
-            onClick={handleCameraScan}
-            disabled={loading}
-            className="mt-8 w-full max-w-sm rounded-xl bg-blue-600 py-3.5 text-white text-lg font-semibold hover:bg-blue-700 transition"
-          >
-            {loading ? "Scanning..." : "Simulate Camera Scan"}
-          </button>
-
         </div>
 
         {/* Error */}
         {message && (
-          <div className="px-8 pb-8">
+          <div className="px-5 pb-8 md:px-8">
+            <div className="rounded-2xl border border-red-300 bg-red-50 p-6 text-center">
+              <XCircle className="mx-auto mb-4 h-14 w-14 text-red-600" />
 
-            <div className="rounded-xl border border-red-300 bg-red-100 text-red-700 p-4 text-center">
+              <h3 className="text-xl font-bold text-red-700">
+                Vehicle Not Found
+              </h3>
 
-              {message}
+              <p className="mt-3 text-gray-600">{message}</p>
 
-              <div className="mt-5">
+              <p className="mt-2 text-sm text-gray-500">
+                Register the resident before allowing vehicle access.
+              </p>
 
-                <Link
-                  href="/registration"
-                  className="inline-block rounded-xl bg-green-600 px-6 py-3 text-white font-semibold hover:bg-green-700 transition"
-                >
-                  Register New Resident
-                </Link>
-
-              </div>
-
+              <Link
+                href="/registration"
+                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-green-600 px-6 py-3 font-semibold text-white transition hover:bg-green-700"
+              >
+                <UserPlus size={20} />
+                Register Resident
+              </Link>
             </div>
-
           </div>
         )}
 
         {/* Resident Data */}
         {resident && (
-          <div className="border-t bg-gray-50 p-8">
+          <div className="border-t bg-gray-50 px-5 py-8 md:px-8">
+            <div className="mb-8 text-center">
+              <CheckCircle className="mx-auto mb-3 h-14 w-14 text-green-600" />
 
-            <h3 className="text-2xl font-bold text-center mb-8">
-              Resident Information
-            </h3>
+              <h3 className="text-2xl font-bold text-gray-800">
+                Vehicle Verified Successfully
+              </h3>
 
-            <div className="bg-white rounded-2xl shadow-lg border p-6">
+              <p className="mt-2 text-gray-500">
+                Resident information has been retrieved successfully.
+              </p>
+            </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="rounded-3xl border bg-white p-6 shadow-lg">
+              <div className="mb-6 flex items-center gap-3">
+                <Car className="text-blue-600" size={28} />
 
-                <InfoCard
-                  title="Resident Name"
-                  value={resident.name}
-                />
+                <h3 className="text-xl font-bold text-gray-800">
+                  Resident Information
+                </h3>
+              </div>
 
-                <InfoCard
-                  title="Phone Number"
-                  value={resident.phone}
-                />
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                <InfoCard title="Resident Name" value={resident.name} />
 
-                <InfoCard
-                  title="Plate Number"
-                  value={resident.plateNumber}
-                />
+                <InfoCard title="Phone Number" value={resident.phone} />
 
-                <InfoCard
-                  title="Unit Number"
-                  value={resident.unitNumber}
-                />
+                <InfoCard title="Plate Number" value={resident.plateNumber} />
 
-                <InfoCard
-                  title="License Number"
-                  value={resident.carLicense}
-                />
+                <InfoCard title="Unit Number" value={resident.unitNumber} />
 
-                <div className="bg-slate-50 rounded-xl border p-4">
+                <InfoCard title="License Number" value={resident.carLicense} />
 
-                  <p className="text-sm text-gray-500">
-                    Resident Type
-                  </p>
+                <div className="rounded-xl border bg-slate-50 p-4">
+                  <p className="text-sm text-gray-500">Resident Type</p>
 
                   <span
-                    className={`inline-flex mt-2 px-4 py-2 rounded-full text-sm font-semibold ${
+                    className={`mt-2 inline-flex rounded-full px-4 py-2 text-sm font-semibold ${
                       resident.residentType === "owner"
                         ? "bg-green-100 text-green-700"
                         : "bg-blue-100 text-blue-700"
                     }`}
                   >
-                    {resident.residentType === "owner"
-                      ? "Owner"
-                      : "Tenant"}
+                    {resident.residentType === "owner" ? "Owner" : "Tenant"}
                   </span>
-
                 </div>
-
               </div>
 
-              <div className="mt-6 text-center">
-
-                <span className="inline-block rounded-xl bg-green-100 border border-green-300 px-6 py-3 text-green-700 font-semibold">
+              <div className="mt-8 flex justify-center">
+                <div className="rounded-xl border border-green-300 bg-green-100 px-8 py-4 font-semibold text-green-700">
                   ✅ Access Granted
-                </span>
-
+                </div>
               </div>
-
             </div>
-
           </div>
         )}
-
       </div>
     </div>
   );
@@ -179,12 +165,10 @@ export default function VehicleLookup() {
 
 function InfoCard({ title, value }) {
   return (
-    <div className="bg-slate-50 rounded-xl border p-4">
-      <p className="text-sm text-gray-500">
-        {title}
-      </p>
+    <div className="rounded-xl border bg-slate-50 p-4">
+      <p className="text-sm text-gray-500">{title}</p>
 
-      <h4 className="text-lg font-bold text-gray-800 mt-1">
+      <h4 className="mt-1 wrap-break-word text-lg font-bold text-gray-800">
         {value}
       </h4>
     </div>

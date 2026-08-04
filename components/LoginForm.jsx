@@ -36,10 +36,7 @@ export default function LoginForm() {
       localStorage.setItem("token", response.data.token);
 
       if (response.data.user) {
-        localStorage.setItem(
-          "resident",
-          JSON.stringify(response.data.user)
-        );
+        localStorage.setItem("resident", JSON.stringify(response.data.user));
       }
 
       setMessage("Login successful.");
@@ -49,9 +46,7 @@ export default function LoginForm() {
         router.push("/profile");
       }, 1200);
     } catch (error) {
-      setMessage(
-        error.response?.data?.message || "Invalid email or password."
-      );
+      setMessage(error.response?.data?.message || "Invalid email or password.");
       setMessageType("error");
     }
   };
@@ -59,13 +54,10 @@ export default function LoginForm() {
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 flex justify-center items-center px-4 py-10">
       <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
-
         {/* Header */}
 
         <div className="bg-linear-to-r from-blue-600 to-indigo-700 text-white text-center py-8 px-5">
-          <h2 className="text-3xl font-bold tracking-wide">
-             Login
-          </h2>
+          <h2 className="text-3xl font-bold tracking-wide">Login</h2>
 
           <p className="mt-2 text-blue-100">
             Sign in to manage your information.
@@ -134,7 +126,7 @@ export default function LoginForm() {
               href="/registration"
               className="ml-2 text-blue-600 font-semibold hover:underline"
             >
-              Register Vehicle
+              Register Now
             </Link>
           </div>
         </form>

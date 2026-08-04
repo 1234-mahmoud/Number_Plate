@@ -17,7 +17,8 @@ export default function Profile() {
     carLicense: "2364846422",
     residentType: "owner",
   });
-
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("success");
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -39,113 +40,138 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 flex justify-center items-center px-4 py-10">
-      <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
-
+      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
         {/* Header */}
-        <div className="bg-linear-to-r from-blue-600 to-indigo-700 text-white text-center py-8 px-5">
-          <h2 className="text-3xl font-bold tracking-wide">
-            My Profile
-          </h2>
 
-          <p className="mt-2 text-blue-100">
-            View and update your personal information.
-          </p>
-        </div>
+        <div className="bg-linear-to-r from-blue-600 to-indigo-700 px-6 py-8 text-white">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="flex items-center gap-5">
+              <div className="w-24 h-24 rounded-full bg-white/20 border-4 border-white flex items-center justify-center text-4xl font-bold">
+                {formData.name.charAt(0)}
+              </div>
 
-        {/* Form */}
-        <div className="flex flex-col items-center gap-6 px-8 py-10">
+              <div>
+                <h2 className="text-3xl font-bold">{formData.name}</h2>
 
-          <Input
-            name="name"
-            label_title="Full Name"
-            input_type="text"
-            value={formData.name}
-            placeholder="Full Name"
-            handleCahnge={handleChange}
-            disabled={!isEditing}
-          />
+                <p className="text-blue-100 mt-1">{formData.email}</p>
 
-          <Input
-            name="email"
-            label_title="Email Address"
-            input_type="email"
-            value={formData.email}
-            placeholder="Email"
-            handleCahnge={handleChange}
-            disabled={!isEditing}
-          />
-
-          <Input
-            name="phone"
-            label_title="Phone Number"
-            input_type="text"
-            value={formData.phone}
-            placeholder="Phone Number"
-            handleCahnge={handleChange}
-            disabled={!isEditing}
-          />
-
-          <Input
-            name="plateNumber"
-            label_title="Plate Number"
-            input_type="text"
-            value={formData.plateNumber}
-            placeholder="Plate Number"
-            handleCahnge={handleChange}
-            disabled={!isEditing}
-          />
-
-          <Input
-            name="unitNumber"
-            label_title="Unit Number"
-            input_type="text"
-            value={formData.unitNumber}
-            placeholder="Unit Number"
-            handleCahnge={handleChange}
-            disabled={!isEditing}
-          />
-
-          <Input
-            name="carLicense"
-            label_title="License Number"
-            input_type="text"
-            value={formData.carLicense}
-            placeholder="License Number"
-            handleCahnge={handleChange}
-            disabled={!isEditing}
-          />
-
-          {/* Resident Type */}
-          <div className="w-full max-w-2xl flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6">
-
-            <label className="w-45 text-gray-700 font-semibold">
-              Resident Type
-            </label>
-
-            <div className="flex-1">
-              <span
-                className={`inline-flex px-5 py-3 rounded-xl font-semibold ${
-                  formData.residentType === "owner"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-blue-100 text-blue-700"
-                }`}
-              >
-                {formData.residentType === "owner"
-                  ? "Owner"
-                  : "Tenant"}
-              </span>
+                <div className="mt-3">
+                  <span
+                    className={`inline-flex px-4 py-2 rounded-full text-sm font-semibold ${
+                      formData.residentType === "owner"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-blue-100 text-blue-700"
+                    }`}
+                  >
+                    {formData.residentType === "owner" ? "Owner" : "Tenant"}
+                  </span>
+                </div>
+              </div>
             </div>
 
-          </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-2xl bg-white/10 backdrop-blur px-6 py-4 text-center">
+                <p className="text-sm text-blue-100">Vehicles</p>
 
-          {/* Buttons */}
-          {!isEditing ? (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="
+                <h3 className="text-3xl font-bold">1</h3>
+              </div>
+
+              <div className="rounded-2xl bg-white/10 backdrop-blur px-6 py-4 text-center">
+                <p className="text-sm text-blue-100">Unit</p>
+
+                <h3 className="text-3xl font-bold">{formData.unitNumber}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="px-8 py-10">
+          <div className="grid gap-6">
+            <Input
+              name="name"
+              label_title="Full Name"
+              input_type="text"
+              value={formData.name}
+              placeholder="Full Name"
+              handleCahnge={handleChange}
+              disabled={!isEditing}
+            />
+
+            <Input
+              name="email"
+              label_title="Email Address"
+              input_type="email"
+              value={formData.email}
+              placeholder="Email"
+              handleCahnge={handleChange}
+              disabled={!isEditing}
+            />
+
+            <Input
+              name="phone"
+              label_title="Phone Number"
+              input_type="text"
+              value={formData.phone}
+              placeholder="Phone Number"
+              handleCahnge={handleChange}
+              disabled={!isEditing}
+            />
+
+            <Input
+              name="plateNumber"
+              label_title="Plate Number"
+              input_type="text"
+              value={formData.plateNumber}
+              placeholder="Plate Number"
+              handleCahnge={handleChange}
+              disabled={!isEditing}
+            />
+
+            <Input
+              name="unitNumber"
+              label_title="Unit Number"
+              input_type="text"
+              value={formData.unitNumber}
+              placeholder="Unit Number"
+              handleCahnge={handleChange}
+              disabled={!isEditing}
+            />
+
+            <Input
+              name="carLicense"
+              label_title="License Number"
+              input_type="text"
+              value={formData.carLicense}
+              placeholder="License Number"
+              handleCahnge={handleChange}
+              disabled={!isEditing}
+            />
+
+            <div className="w-full max-w-3xl flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6">
+              <label className="w-50 text-gray-700 font-semibold">
+                Resident Type
+              </label>
+
+              <div className="flex-1">
+                <span
+                  className={`inline-flex rounded-xl px-5 py-3 font-semibold ${
+                    formData.residentType === "owner"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-blue-100 text-blue-700"
+                  }`}
+                >
+                  {formData.residentType === "owner" ? "Owner" : "Tenant"}
+                </span>
+              </div>
+            </div>
+            {!isEditing ? (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="
                 mt-4
                 w-full
                 max-w-sm
+                mx-auto
                 rounded-xl
                 bg-blue-600
                 py-3.5
@@ -157,74 +183,111 @@ export default function Profile() {
                 hover:bg-blue-700
                 hover:shadow-xl
               "
-            >
-              Edit Profile
-            </button>
-          ) : (
-            <div className="flex flex-col md:flex-row gap-4 w-full max-w-sm">
-
-              <button
-                onClick={handleSave}
-                className="
+              >
+                Edit Profile
+              </button>
+            ) : (
+              <div className="flex flex-col md:flex-row gap-4 w-full max-w-md mx-auto">
+                <button
+                  onClick={handleSave}
+                  className="
                   flex-1
                   rounded-xl
                   bg-green-600
                   py-3
                   text-white
                   font-semibold
-                  hover:bg-green-700
                   transition
+                  hover:bg-green-700
+                  hover:shadow-lg
                 "
-              >
-                Save Changes
-              </button>
+                >
+                  Save Changes
+                </button>
 
-              <button
-                onClick={handleCancel}
-                className="
+                <button
+                  onClick={handleCancel}
+                  className="
                   flex-1
                   rounded-xl
                   bg-gray-400
                   py-3
                   text-white
                   font-semibold
-                  hover:bg-gray-500
                   transition
+                  hover:bg-gray-500
                 "
-              >
-                Cancel
-              </button>
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
 
+            <div className="mt-10 border-t pt-8">
+              <div className="flex flex-col md:flex-row gap-4 justify-center">
+                <Link
+                  href="/vehicle-registration"
+                  className="
+                  flex
+                  items-center
+                  justify-center
+                  gap-3
+                  rounded-xl
+                  bg-green-600
+                  px-8
+                  py-4
+                  text-lg
+                  font-semibold
+                  text-white
+                  transition-all
+                  duration-300
+                  hover:bg-green-700
+                  hover:shadow-xl
+                "
+                >
+                  <Plus size={22} />
+                  Add New Vehicle
+                </Link>
+
+                <Link
+                  href="/"
+                  className="
+                  flex
+                  items-center
+                  justify-center
+                  rounded-xl
+                  border-2
+                  border-blue-600
+                  px-8
+                  py-4
+                  text-lg
+                  font-semibold
+                  text-blue-600
+                  transition-all
+                  duration-300
+                  hover:bg-blue-50
+                "
+                >
+                  My Vehicles
+                </Link>
+              </div>
             </div>
-          )}
-
-<div className="mt-8 flex justify-center">
-  <Link
-    href="/vehicle-registration"
-    className="
-      inline-flex
-      items-center
-      gap-3
-      rounded-xl
-      bg-green-600
-      px-8
-      py-4
-      text-lg
-      font-semibold
-      text-white
-      transition-all
-      duration-300
-      hover:bg-green-700
-      hover:shadow-xl
-      hover:-translate-y-1
-      active:scale-95
-    "
-  >
-    <Plus size={22} />
-    Add New Vehicle
-  </Link>
-</div>
+          </div>
         </div>
+
+        {message && (
+          <div className="px-8 pb-8">
+            <div
+              className={`rounded-xl p-4 text-center font-medium ${
+                messageType === "success"
+                  ? "bg-green-100 border border-green-300 text-green-700"
+                  : "bg-red-100 border border-red-300 text-red-700"
+              }`}
+            >
+              {message}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
