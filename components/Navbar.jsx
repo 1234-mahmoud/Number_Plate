@@ -11,6 +11,10 @@ export default function Navbar() {
 
   const links = [
     {
+      name: "Login",
+      href: "/login",
+    },
+    {
       name: "Home",
       href: "/",
     },

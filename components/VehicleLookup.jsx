@@ -2,197 +2,191 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Input from "@/utilites/Input";
 import api from "@/Services/api";
 
 export default function VehicleLookup() {
-  const [plateNumber, setPlateNumber] = useState("");//to search with it 
-  const [resident, setResident] = useState([]); //to return all user's registered data 
+  const [resident, setResident] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
+  // Temporary plate number until camera integration
+  const plateNumber = "234";
 
+  const handleCameraScan = async () => {
     try {
+      setLoading(true);
+      setMessage("");
+
       const response = await api.get("/residents", {
         params: {
           plateNumber,
         },
       });
 
-//       console.log("response.data =", response.data);
-// console.log("resident =", response.data.data.resident);
-// console.log("data =", response.data.data);
-
-setResident(response.data.data.residents);
-      setMessage("");
+      setResident(response.data.data.residents[0] || null);
     } catch (error) {
-      console.error(error);
-
       setResident(null);
       setMessage(error.response?.data?.message || "Resident not found.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 flex justify-center items-center px-4 py-10">
       <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
+
         {/* Header */}
         <div className="bg-linear-to-r from-blue-600 to-indigo-700 text-white text-center py-8 px-5">
-          <h2 className="text-3xl font-bold tracking-wide">
+          <h2 className="text-3xl font-bold">
             Vehicle Verification
           </h2>
 
           <p className="mt-2 text-blue-100">
-            Search for a registered vehicle.
+            Scan vehicle plate to verify resident.
           </p>
         </div>
 
-        {/* Search Form */}
-        <form
-          onSubmit={handleSearch}
-          className="flex flex-col items-center gap-6 px-8 py-10"
-        >
-          <Input
-            name="plateNumber"
-            label_title="Plate Number"
-            input_type="text"
-            placeholder="Enter Vehicle Plate Number"
-            value={plateNumber}
-            handleCahnge={(e) => setPlateNumber(e.target.value)}
-          />
+        {/* Camera Section */}
+        <div className="px-8 py-10 flex flex-col items-center">
+
+          <div className="w-full max-w-lg h-64 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center">
+
+            <div className="text-6xl">
+              📷
+            </div>
+
+            <h3 className="text-xl font-semibold mt-4">
+              Camera Preview
+            </h3>
+
+            <p className="text-gray-500 mt-2 text-center">
+              Waiting for vehicle plate...
+            </p>
+
+          </div>
 
           <button
-            type="submit"
-            className="
-              mt-2
-              w-full
-              max-w-sm
-              rounded-xl
-              bg-blue-600
-              py-3.5
-              text-white
-              text-lg
-              font-semibold
-              transition-all
-              duration-300
-              hover:bg-blue-700
-              hover:shadow-xl
-              hover:-translate-y-1
-              active:scale-95
-            "
+            onClick={handleCameraScan}
+            disabled={loading}
+            className="mt-8 w-full max-w-sm rounded-xl bg-blue-600 py-3.5 text-white text-lg font-semibold hover:bg-blue-700 transition"
           >
-            Search Vehicle
+            {loading ? "Scanning..." : "Simulate Camera Scan"}
           </button>
 
-           <Link
-    href="/registration"
-    className="
-      w-52
-      rounded-xl
-      bg-green-600
-      py-3.5
-      text-center
-      text-white
-      text-lg
-      font-semibold
-      transition-all
-      duration-300
-      hover:bg-green-700
-      hover:shadow-xl
-    "
-  >
-    Register New User
-  </Link>
-        </form>
+        </div>
 
-        {/* Error Message */}
+        {/* Error */}
         {message && (
-          <div className="mx-8 mb-6 rounded-lg bg-red-100 border border-red-300 px-4 py-3 text-center text-red-700">
-            {message}
+          <div className="px-8 pb-8">
+
+            <div className="rounded-xl border border-red-300 bg-red-100 text-red-700 p-4 text-center">
+
+              {message}
+
+              <div className="mt-5">
+
+                <Link
+                  href="/registration"
+                  className="inline-block rounded-xl bg-green-600 px-6 py-3 text-white font-semibold hover:bg-green-700 transition"
+                >
+                  Register New Resident
+                </Link>
+
+              </div>
+
+            </div>
+
           </div>
         )}
 
-        {/* Result */}
- {/* Result */}
-{resident.length > 0 && (
-  <div className="border-t border-gray-200 bg-gray-50 px-8 py-8">
-    <h3 className="text-2xl font-bold text-center text-gray-800 mb-8">
-      Resident Information
-    </h3>
+        {/* Resident Data */}
+        {resident && (
+          <div className="border-t bg-gray-50 p-8">
 
-    {resident.map((item) => (
-      <div
-        key={item._id}
-        className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 mb-6"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {/* Name */}
-          <div className="bg-slate-50 rounded-xl border p-4">
-            <p className="text-sm text-gray-500">Resident Name</p>
-            <h4 className="text-lg font-bold text-gray-800 mt-1">
-              {item.name}
-            </h4>
+            <h3 className="text-2xl font-bold text-center mb-8">
+              Resident Information
+            </h3>
+
+            <div className="bg-white rounded-2xl shadow-lg border p-6">
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <InfoCard
+                  title="Resident Name"
+                  value={resident.name}
+                />
+
+                <InfoCard
+                  title="Phone Number"
+                  value={resident.phone}
+                />
+
+                <InfoCard
+                  title="Plate Number"
+                  value={resident.plateNumber}
+                />
+
+                <InfoCard
+                  title="Unit Number"
+                  value={resident.unitNumber}
+                />
+
+                <InfoCard
+                  title="License Number"
+                  value={resident.carLicense}
+                />
+
+                <div className="bg-slate-50 rounded-xl border p-4">
+
+                  <p className="text-sm text-gray-500">
+                    Resident Type
+                  </p>
+
+                  <span
+                    className={`inline-flex mt-2 px-4 py-2 rounded-full text-sm font-semibold ${
+                      resident.residentType === "owner"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-blue-100 text-blue-700"
+                    }`}
+                  >
+                    {resident.residentType === "owner"
+                      ? "Owner"
+                      : "Tenant"}
+                  </span>
+
+                </div>
+
+              </div>
+
+              <div className="mt-6 text-center">
+
+                <span className="inline-block rounded-xl bg-green-100 border border-green-300 px-6 py-3 text-green-700 font-semibold">
+                  ✅ Access Granted
+                </span>
+
+              </div>
+
+            </div>
+
           </div>
+        )}
 
-          {/* Phone */}
-          <div className="bg-slate-50 rounded-xl border p-4">
-            <p className="text-sm text-gray-500">Phone Number</p>
-            <h4 className="text-lg font-bold text-gray-800 mt-1">
-              {item.phone}
-            </h4>
-          </div>
-
-          {/* Plate */}
-          <div className="bg-slate-50 rounded-xl border p-4">
-            <p className="text-sm text-gray-500">Plate Number</p>
-            <h4 className="text-lg font-bold text-gray-800 mt-1">
-              {item.plateNumber}
-            </h4>
-          </div>
-
-          {/* Unit */}
-          <div className="bg-slate-50 rounded-xl border p-4">
-            <p className="text-sm text-gray-500">Unit Number</p>
-            <h4 className="text-lg font-bold text-gray-800 mt-1">
-              {item.unitNumber}
-            </h4>
-          </div>
-
-          {/* License */}
-          <div className="bg-slate-50 rounded-xl border p-4">
-            <p className="text-sm text-gray-500">License Number</p>
-            <h4 className="text-lg font-bold text-gray-800 mt-1">
-              {item.carLicense}
-            </h4>
-          </div>
-
-          {/* Resident Type */}
-          <div className="bg-slate-50 rounded-xl border p-4">
-            <p className="text-sm text-gray-500">Resident Type</p>
-
-            <span
-              className={`inline-flex mt-2 px-4 py-2 rounded-full text-sm font-semibold ${
-                item.residentType === "owner"
-                  ? "bg-green-100 text-green-700"
-                  : "bg-blue-100 text-blue-700"
-              }`}
-            >
-              {item.residentType === "owner" ? "Owner" : "Tenant"}
-            </span>
-          </div>
-        </div>
-
-        <div className="mt-6 flex justify-center">
-          <div className="bg-green-100 border border-green-300 text-green-700 rounded-xl px-6 py-3 font-semibold">
-            ✅ Vehicle Verified Successfully
-          </div>
-        </div>
       </div>
-    ))}
-  </div>
-)}
-      </div>
+    </div>
+  );
+}
+
+function InfoCard({ title, value }) {
+  return (
+    <div className="bg-slate-50 rounded-xl border p-4">
+      <p className="text-sm text-gray-500">
+        {title}
+      </p>
+
+      <h4 className="text-lg font-bold text-gray-800 mt-1">
+        {value}
+      </h4>
     </div>
   );
 }
