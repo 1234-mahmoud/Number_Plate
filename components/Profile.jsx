@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 import Input from "@/utilites/Input";
-
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -37,11 +38,11 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-slate-200 flex justify-center items-center px-4 py-10">
+    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 flex justify-center items-center px-4 py-10">
       <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
 
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white text-center py-8 px-5">
+        <div className="bg-linear-to-r from-blue-600 to-indigo-700 text-white text-center py-8 px-5">
           <h2 className="text-3xl font-bold tracking-wide">
             My Profile
           </h2>
@@ -197,6 +198,32 @@ export default function Profile() {
             </div>
           )}
 
+<div className="mt-8 flex justify-center">
+  <Link
+    href="/vehicle-registration"
+    className="
+      inline-flex
+      items-center
+      gap-3
+      rounded-xl
+      bg-green-600
+      px-8
+      py-4
+      text-lg
+      font-semibold
+      text-white
+      transition-all
+      duration-300
+      hover:bg-green-700
+      hover:shadow-xl
+      hover:-translate-y-1
+      active:scale-95
+    "
+  >
+    <Plus size={22} />
+    Add New Vehicle
+  </Link>
+</div>
         </div>
       </div>
     </div>

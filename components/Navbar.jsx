@@ -23,7 +23,7 @@ export default function Navbar() {
       href: "/vehicle-lookup",
     },
     {
-      name: "Register",
+      name: "Register Resident",
       href: "/registration",
     },
     {

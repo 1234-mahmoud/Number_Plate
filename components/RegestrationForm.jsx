@@ -10,10 +10,10 @@ export default function RegistrationForm() {
 
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
+    password: "",
     phone: "",
-    plateNumber: "",
     unitNumber: "",
-    carLicense: "",
     residentType: "",
   });
 
@@ -35,19 +35,18 @@ export default function RegistrationForm() {
     try {
       const response = await api.post("/residents", formData);
 
-      setMessage(
-        response.data.message || "Vehicle registered successfully."
-      );
+      setMessage(response.data.message || "Vehicle registered successfully.");
 
       setMessageType("success");
 
       // Clear form
       setFormData({
         name: "",
+        email: "",
+        password: "",
         phone: "",
-        plateNumber: "",
         unitNumber: "",
-        carLicense: "",
+
         residentType: "",
       });
 
@@ -56,9 +55,7 @@ export default function RegistrationForm() {
         router.push("/vehicle-lookup");
       }, 1500);
     } catch (error) {
-      setMessage(
-        error.response?.data?.message || "Something went wrong."
-      );
+      setMessage(error.response?.data?.message || "Something went wrong.");
       setMessageType("error");
     }
   };
@@ -66,16 +63,13 @@ export default function RegistrationForm() {
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 flex justify-center items-center px-4 py-10">
       <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
-
         {/* Header */}
         <div className="bg-linear-to-r from-blue-600 to-indigo-700 text-white text-center py-8 px-5">
           <h2 className="text-3xl font-bold tracking-wide">
-            Vehicle Registration
+            User Registration
           </h2>
 
-          <p className="mt-2 text-blue-100">
-            Register a new resident vehicle.
-          </p>
+          <p className="mt-2 text-blue-100">Register a new resident.</p>
         </div>
 
         {/* Registration Form */}
@@ -93,6 +87,24 @@ export default function RegistrationForm() {
           />
 
           <Input
+            name="email"
+            label_title="Email"
+            input_type="email"
+            placeholder="Enter Your Email"
+            value={formData.email}
+            handleCahnge={handleChange}
+          />
+
+          <Input
+            name="password"
+            label_title="Password"
+            input_type="password"
+            placeholder="Enter the Password"
+            value={formData.password}
+            handleCahnge={handleChange}
+          />
+
+          <Input
             name="phone"
             label_title="Phone Number"
             input_type="text"
@@ -102,29 +114,11 @@ export default function RegistrationForm() {
           />
 
           <Input
-            name="plateNumber"
-            label_title="Plate Number"
-            input_type="text"
-            placeholder="Enter Plate Number"
-            value={formData.plateNumber}
-            handleCahnge={handleChange}
-          />
-
-          <Input
             name="unitNumber"
             label_title="Unit Number"
             input_type="text"
             placeholder="Enter Unit Number"
             value={formData.unitNumber}
-            handleCahnge={handleChange}
-          />
-
-          <Input
-            name="carLicense"
-            label_title="License Number"
-            input_type="text"
-            placeholder="Enter License Number"
-            value={formData.carLicense}
             handleCahnge={handleChange}
           />
 

@@ -64,11 +64,11 @@ export default function LoginForm() {
 
         <div className="bg-linear-to-r from-blue-600 to-indigo-700 text-white text-center py-8 px-5">
           <h2 className="text-3xl font-bold tracking-wide">
-            Vehicle Login
+             Login
           </h2>
 
           <p className="mt-2 text-blue-100">
-            Sign in to manage your vehicle information.
+            Sign in to manage your information.
           </p>
         </div>
 
