@@ -11,20 +11,28 @@ export default function Navbar() {
 
   const links = [
     {
-      name: "Login",
-      href: "/login",
-    },
-    {
       name: "Home",
       href: "/",
+    },
+    {
+    name: "Admin",
+    href: "/admin",
+  },
+    {
+      name: "Vehicle Lookup",
+      href: "/vehicle-lookup",
     },
     {
       name: "Register",
       href: "/registration",
     },
     {
-      name: "Vehicle Lookup",
-      href: "/vehicle-lookup",
+      name: "Profile",
+      href: "/profile",
+    },
+    {
+      name: "Login",
+      href: "/login",
     },
   ];
 
@@ -34,7 +42,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className="text-2xl font-bold text-blue-700 tracking-wide"
+          className="text-2xl whitespace-nowrap font-bold text-blue-700 tracking-wide"
         >
           Car Plate
         </Link>
