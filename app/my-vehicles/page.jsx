@@ -105,10 +105,17 @@ export default function MyVehicles() {
                   </div>
 
                   <div>
+                    <p className="text-gray-400 text-sm">Brand</p>
+
+                    <h3 className="font-bold">
+                      {vehicle.brand} 
+                    </h3>
+                  </div>
+                   <div>
                     <p className="text-gray-400 text-sm">Model</p>
 
                     <h3 className="font-bold">
-                      {vehicle.brand} {vehicle.model}
+                      {vehicle.model}
                     </h3>
                   </div>
 

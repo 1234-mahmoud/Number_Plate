@@ -17,9 +17,9 @@ export default function Home() {
         </div>
 
         {/* Main Actions */}
-        <div className="grid gap-8 p-6 md:grid-cols-3 md:p-10">
+        <div className="grid gap-8 p-6 md:grid-cols-2 md:p-10">
           {/* Vehicle Lookup */}
-          <Link
+          {/* <Link
             href="/vehicle-lookup"
             className="group rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
           >
@@ -36,7 +36,7 @@ export default function Home() {
             <div className="mt-8 rounded-xl bg-green-600 py-3 font-semibold text-white transition group-hover:bg-green-700">
               Open Lookup
             </div>
-          </Link>
+          </Link> */}
 
           {/* Login */}
           <Link

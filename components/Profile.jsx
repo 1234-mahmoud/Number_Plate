@@ -14,7 +14,7 @@ export default function Profile() {
     name: "",
     email: "",
     phone: "",
-    plateNumber: "",
+    password: "",
     unit: "",
     residentType: "",
   });
@@ -59,6 +59,7 @@ useEffect(() => {
         email: response.data.data.user.email || "",
         phone: response.data.data.user.phone || "",
         unit: response.data.data.user.unit || "",
+        password: response.data.data.user.password || "",
         residentType: response.data.data.user.residentType || "",
       }));
 
@@ -152,11 +153,11 @@ useEffect(() => {
             />
 
             <Input
-              name="plateNumber"
-              label_title="Plate Number"
-              input_type="text"
-              value={formData.plateNumber}
-              placeholder="Plate Number"
+              name="password"
+              label_title="Password"
+              input_type="password"
+              value={formData.password}
+              placeholder="Password"
               handleCahnge={handleChange}
               disabled={!isEditing}
             />
