@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import Input from "@/utilites/Input";
@@ -19,6 +20,8 @@ export default function Profile() {
   });
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("success");
+    const { id } = useParams();
+
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,

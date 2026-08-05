@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Users,
   ShieldCheck,
@@ -9,11 +11,12 @@ import {
   Trash2,
   LayoutDashboard,
 } from "lucide-react";
-
+import DeleteModal from "@/components/DeleteModal";
+import EditEmployeeModal from "@/components/EditEmployeeModal";
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
 
-  const residents = [
+  const [residents, setResidents] = useState([
     {
       id: 1,
       name: "Mahmoud Elbalhi",
@@ -28,9 +31,8 @@ export default function AdminDashboard() {
       unit: "A08",
       type: "Tenant",
     },
-  ];
-
-  const employees = [
+  ]);
+  const [employees, setEmployees] = useState([
     {
       id: 1,
       name: "Mohamed Hassan",
@@ -43,7 +45,46 @@ export default function AdminDashboard() {
       email: "gate2@test.com",
       gate: "Gate 2",
     },
-  ];
+  ]);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [selectedResident, setSelectedResident] = useState(null);
+  const [openDeleteEmployee, setOpenDeleteEmployee] = useState(false);
+  const [openEditEmployee, setOpenEditEmployee] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const router = useRouter();
+  const handleDeleteResident = () => {
+    setResidents((prev) =>
+      prev.filter((resident) => resident.id !== selectedResident),
+    );
+
+    setOpenDelete(false);
+    setSelectedResident(null);
+  };
+  const handleDeleteEmployee = () => {
+    setEmployees((prev) =>
+      prev.filter((employee) => employee.id !== selectedEmployee),
+    );
+
+    setOpenDeleteEmployee(false);
+    setSelectedEmployee(null);
+  };
+
+  const handleEmployeeChange = (e) => {
+    setSelectedEmployee((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSaveEmployee = () => {
+    setEmployees((prev) =>
+      prev.map((emp) =>
+        emp.id === selectedEmployee.id ? selectedEmployee : emp,
+      ),
+    );
+
+    setOpenEditEmployee(false);
+  };
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 py-6 sm:py-8 lg:py-10 px-3 sm:px-5">
@@ -181,9 +222,10 @@ export default function AdminDashboard() {
 
                   <div className="grid gap-3">
                     <button
-                      onClick={() => setActiveTab("employees")}
-                      className="rounded-xl bg-green-600 py-3 text-white font-semibold hover:bg-green-700 transition"
+                      onClick={() => router.push("/admin/add-employee")}
+                      className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 transition text-white rounded-xl px-5 py-3 w-full sm:w-auto"
                     >
+                      <UserPlus size={20} />
                       Add Employee
                     </button>
 
@@ -204,7 +246,10 @@ export default function AdminDashboard() {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <h2 className="text-2xl sm:text-3xl font-bold">Residents</h2>
 
-                <button className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 transition text-white rounded-xl px-5 py-3 w-full sm:w-auto">
+                <button
+                  onClick={() => router.push("/registration")}
+                  className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 transition text-white rounded-xl px-5 py-3 w-full sm:w-auto"
+                >
                   <UserPlus size={20} />
                   Add Resident
                 </button>
@@ -265,11 +310,19 @@ export default function AdminDashboard() {
                     </div>
 
                     <div className="flex justify-end gap-3">
-                      <button className="flex items-center justify-center rounded-xl bg-blue-600 hover:bg-blue-700 transition text-white p-3">
+                      <button
+                        onClick={() => handleOpenResidentModal(resident)}
+                        className="flex items-center justify-center rounded-xl bg-blue-600 hover:bg-blue-700 transition text-white p-3"
+                      >
                         <Edit size={18} />
                       </button>
-
-                      <button className="flex items-center justify-center rounded-xl bg-red-600 hover:bg-red-700 transition text-white p-3">
+                      <button
+                        onClick={() => {
+                          setSelectedResident(resident.id);
+                          setOpenDelete(true);
+                        }}
+                        className="flex items-center justify-center rounded-xl bg-red-600 hover:bg-red-700 transition text-white p-3"
+                      >
                         <Trash2 size={18} />
                       </button>
                     </div>
@@ -329,11 +382,23 @@ export default function AdminDashboard() {
                     </div>
 
                     <div className="flex justify-end gap-3">
-                      <button className="flex items-center justify-center rounded-xl bg-blue-600 hover:bg-blue-700 transition text-white p-3">
+                      <button
+                        onClick={() => {
+                          setSelectedEmployee({ ...employee });
+                          setOpenEditEmployee(true);
+                        }}
+                        className="flex items-center justify-center rounded-xl bg-blue-600 p-3 text-white hover:bg-blue-700"
+                      >
                         <Edit size={18} />
                       </button>
 
-                      <button className="flex items-center justify-center rounded-xl bg-red-600 hover:bg-red-700 transition text-white p-3">
+                      <button
+                        onClick={() => {
+                          setSelectedEmployee(employee.id);
+                          setOpenDeleteEmployee(true);
+                        }}
+                        className="flex items-center justify-center rounded-xl bg-red-600 hover:bg-red-700 transition text-white p-3"
+                      >
                         <Trash2 size={18} />
                       </button>
                     </div>
@@ -344,6 +409,35 @@ export default function AdminDashboard() {
           )}
         </div>
       </div>
+      <DeleteModal
+        open={openDelete}
+        title="Delete Resident"
+        message="Are you sure you want to delete this resident?"
+        onConfirm={handleDeleteResident}
+        onCancel={() => {
+          setOpenDelete(false);
+          setSelectedResident(null);
+        }}
+      />
+
+      <DeleteModal
+        open={openDeleteEmployee}
+        title="Delete Employee"
+        message="Are you sure you want to delete this employee?"
+        onConfirm={handleDeleteEmployee}
+        onCancel={() => {
+          setOpenDeleteEmployee(false);
+          setSelectedEmployee(null);
+        }}
+      />
+
+      <EditEmployeeModal
+        open={openEditEmployee}
+        employee={selectedEmployee}
+        onClose={() => setOpenEditEmployee(false)}
+        onSave={handleSaveEmployee}
+        onChange={handleEmployeeChange}
+      />
     </div>
   );
 }
