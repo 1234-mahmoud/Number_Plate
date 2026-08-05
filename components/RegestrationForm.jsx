@@ -15,7 +15,7 @@ export default function RegistrationForm() {
     email: "",
     password: "",
     phone: "",
-    unitNumber: "",
+    unit: "",
     residentType: "",
   });
 
@@ -38,7 +38,7 @@ export default function RegistrationForm() {
     try {
       setLoading(true);
 
-      const response = await api.post("/residents", formData);
+      const response = await api.post("/auth/register", formData);
 
       setMessage(response.data.message || "Account created successfully.");
       setMessageType("success");
@@ -48,7 +48,7 @@ export default function RegistrationForm() {
         email: "",
         password: "",
         phone: "",
-        unitNumber: "",
+        unit: "",
         residentType: "",
       });
     } catch (error) {
@@ -157,11 +157,11 @@ export default function RegistrationForm() {
           />
 
           <Input
-            name="unitNumber"
+            name="unit"
             label_title="Unit Number"
             input_type="text"
             placeholder="Enter Unit Number"
-            value={formData.unitNumber}
+            value={formData.unit}
             handleCahnge={handleChange}
           />
 

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Car, Plus, Trash2 } from "lucide-react";
 import Input from "@/utilites/Input";
+import api from "@/Services/api";
 
 export default function VehicleRegistrationForm() {
   const [vehicles, setVehicles] = useState([
@@ -41,13 +42,38 @@ export default function VehicleRegistrationForm() {
     setVehicles(updatedVehicles);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    console.log(vehicles);
+  try {
+    console.log(vehicles)
+    const response = await api.post("/vehicles", {
+      plateNumber: vehicles[0].plateNumber,
+      carLicense: vehicles[0].carLicense,
+      brand: vehicles[0].brand,
+      model: vehicles[0].model,
+      color: vehicles[0].color,
+    });
 
-    // API Integration Later
-  };
+    console.log(response.data);
+
+    alert("Vehicle registered successfully");
+
+    setVehicles([
+      {
+        plateNumber: "",
+        brand: "",
+        model: "",
+        color: "",
+        carLicense: "",
+      },
+    ]);
+
+  } catch (error) {
+    console.log(error.response?.data || error.message);
+    alert("Failed to register vehicle");
+  }
+};
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 flex justify-center items-center px-4 py-10">

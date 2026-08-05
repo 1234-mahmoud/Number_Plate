@@ -1,26 +1,26 @@
 "use client";
 
-import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useState,useEffect } from "react";
+// import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import Input from "@/utilites/Input";
+import api from "@/Services/api";
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
 
   // Dummy data until API integration
   const [formData, setFormData] = useState({
-    name: "Mahmoud Elbalhi",
-    email: "mahmoud@example.com",
-    phone: "01064218085",
-    plateNumber: "234",
-    unitNumber: "23",
-    carLicense: "2364846422",
-    residentType: "owner",
+    name: "",
+    email: "",
+    phone: "",
+    plateNumber: "",
+    unit: "",
+    residentType: "",
   });
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("success");
-    const { id } = useParams();
+
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -40,6 +40,37 @@ export default function Profile() {
     // TODO: Restore old data from API
     setIsEditing(false);
   };
+
+
+
+
+useEffect(() => {
+  const getProfile = async () => {
+    try {
+      console.log(formData)
+      const response = await api.get("/auth/me");
+      console.log(formData)
+
+      console.log(response.data);
+
+      setFormData((prev) => ({
+        ...prev,
+        name: response.data.data.user.name || "",
+        email: response.data.data.user.email || "",
+        phone: response.data.data.user.phone || "",
+        unit: response.data.data.user.unit || "",
+        residentType: response.data.data.user.residentType || "",
+      }));
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getProfile();
+
+}, []);
+
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 flex justify-center items-center px-4 py-10">
@@ -82,7 +113,7 @@ export default function Profile() {
               <div className="rounded-2xl bg-white/10 backdrop-blur px-6 py-4 text-center">
                 <p className="text-sm text-blue-100">Unit</p>
 
-                <h3 className="text-3xl font-bold">{formData.unitNumber}</h3>
+                <h3 className="text-3xl font-bold">{formData.unit}</h3>
               </div>
             </div>
           </div>
@@ -131,24 +162,16 @@ export default function Profile() {
             />
 
             <Input
-              name="unitNumber"
+              name="unit"
               label_title="Unit Number"
               input_type="text"
-              value={formData.unitNumber}
+              value={formData.unit}
               placeholder="Unit Number"
               handleCahnge={handleChange}
               disabled={!isEditing}
             />
 
-            <Input
-              name="carLicense"
-              label_title="License Number"
-              input_type="text"
-              value={formData.carLicense}
-              placeholder="License Number"
-              handleCahnge={handleChange}
-              disabled={!isEditing}
-            />
+           
 
             <div className="w-full max-w-3xl flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6">
               <label className="w-50 text-gray-700 font-semibold">

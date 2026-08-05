@@ -1,28 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Edit, Trash2, Plus } from "lucide-react";
 
 import EditVehicleModal from "@/components/EditVehicleModal";
 import DeleteVehicleModal from "@/components/DeleteVehicleModal";
+import api from "@/Services/api";
+
 export default function MyVehicles() {
-  const [vehicles, setVehicles] = useState([
-    {
-      id: 1,
-      plate: "234",
-      model: "Toyota Corolla",
-      color: "White",
-      license: "2364846422",
-    },
-    {
-      id: 2,
-      plate: "552",
-      model: "Hyundai Elantra",
-      color: "Black",
-      license: "987654321",
-    },
-  ]);
+  const [vehicles, setVehicles] = useState([]);
 
   const [selectedVehicle, setSelectedVehicle] = useState(null);
 
@@ -30,26 +17,52 @@ export default function MyVehicles() {
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  // Edit Vehicle
+  useEffect(() => {
+    let ignore = false;
+
+    const loadVehicles = async () => {
+  try {
+    const response = await api.get("/residents/me/vehicles");
+
+    console.log(response.data);
+
+    setVehicles(response.data.data.vehicles);
+
+  } catch (error) {
+    console.log(error.response?.data || error.message);
+  }
+};
+    loadVehicles();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
   const handleUpdateVehicle = (updatedVehicle) => {
     setVehicles((prevVehicles) =>
       prevVehicles.map((vehicle) =>
-        vehicle.id === updatedVehicle.id ? updatedVehicle : vehicle,
+        vehicle._id === updatedVehicle._id ? updatedVehicle : vehicle,
       ),
     );
 
     setSelectedVehicle(null);
   };
 
-  // Delete Vehicle
-  const handleDeleteVehicle = () => {
-    setVehicles((prevVehicles) =>
-      prevVehicles.filter((vehicle) => vehicle.id !== selectedVehicle.id),
-    );
+  const handleDeleteVehicle = async () => {
+    try {
+      await api.delete(`/vehicles/${selectedVehicle._id}`);
 
-    setSelectedVehicle(null);
+      setVehicles((prevVehicles) =>
+        prevVehicles.filter((vehicle) => vehicle._id !== selectedVehicle._id),
+      );
 
-    setIsDeleteOpen(false);
+      setSelectedVehicle(null);
+
+      setIsDeleteOpen(false);
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+    }
   };
 
   return (
@@ -81,20 +94,22 @@ export default function MyVehicles() {
           ) : (
             vehicles.map((vehicle) => (
               <div
-                key={vehicle.id}
+                key={vehicle._id}
                 className="border rounded-2xl p-6 flex flex-col lg:flex-row justify-between items-center gap-6 hover:shadow-lg transition"
               >
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 flex-1">
                   <div>
                     <p className="text-gray-400 text-sm">Plate Number</p>
 
-                    <h3 className="font-bold text-lg">{vehicle.plate}</h3>
+                    <h3 className="font-bold text-lg">{vehicle.plateNumber}</h3>
                   </div>
 
                   <div>
                     <p className="text-gray-400 text-sm">Model</p>
 
-                    <h3 className="font-bold">{vehicle.model}</h3>
+                    <h3 className="font-bold">
+                      {vehicle.brand} {vehicle.model}
+                    </h3>
                   </div>
 
                   <div>
@@ -106,13 +121,11 @@ export default function MyVehicles() {
                   <div>
                     <p className="text-gray-400 text-sm">License</p>
 
-                    <h3 className="font-bold">{vehicle.license}</h3>
+                    <h3 className="font-bold">{vehicle.carLicense}</h3>
                   </div>
                 </div>
 
                 <div className="flex gap-3">
-                  {/* Edit Button */}
-
                   <button
                     onClick={() => {
                       setSelectedVehicle(vehicle);
@@ -123,8 +136,6 @@ export default function MyVehicles() {
                   >
                     <Edit size={18} />
                   </button>
-
-                  {/* Delete Button */}
 
                   <button
                     onClick={() => {
@@ -143,20 +154,16 @@ export default function MyVehicles() {
         </div>
       </div>
 
-      {/* Edit Modal */}
-
       <EditVehicleModal
-        vehicle={selectedVehicle}
-        isOpen={isEditOpen}
-        onClose={() => {
-          setIsEditOpen(false);
-
-          setSelectedVehicle(null);
-        }}
-        onSave={handleUpdateVehicle}
-      />
-
-      {/* Delete Modal */}
+  key={selectedVehicle?._id}
+  vehicle={selectedVehicle}
+  isOpen={isEditOpen}
+  onClose={() => {
+    setIsEditOpen(false);
+    setSelectedVehicle(null);
+  }}
+  onSave={handleUpdateVehicle}
+/>
 
       <DeleteVehicleModal
         isOpen={isDeleteOpen}
@@ -167,7 +174,7 @@ export default function MyVehicles() {
         }}
         onConfirm={handleDeleteVehicle}
         title="Delete Vehicle"
-        message={`Are you sure you want to delete vehicle ${selectedVehicle?.plate}?`}
+        message={`Are you sure you want to delete vehicle ${selectedVehicle?.plateNumber}?`}
       />
     </div>
   );

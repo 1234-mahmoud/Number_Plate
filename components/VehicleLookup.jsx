@@ -131,7 +131,7 @@ export default function VehicleLookup() {
 
                 <InfoCard title="Plate Number" value={resident.plateNumber} />
 
-                <InfoCard title="Unit Number" value={resident.unitNumber} />
+                <InfoCard title="Unit Number" value={resident.unit} />
 
                 <InfoCard title="License Number" value={resident.carLicense} />
 
