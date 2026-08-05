@@ -253,7 +253,7 @@ export default function Profile() {
                 </Link>
 
                 <Link
-                  href="/"
+                  href="/my-vehicles"
                   className="
                   flex
                   items-center
