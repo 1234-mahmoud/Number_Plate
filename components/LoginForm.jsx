@@ -11,9 +11,9 @@ export default function SelectUserType() {
         router.push("/profile");
         break;
 
-      case "tenant":
-        router.push("/profile");
-        break;
+      // case "tenant":
+      //   router.push("/profile");
+      //   break;
 
       case "security":
         router.push("/security_page");
@@ -30,7 +30,7 @@ export default function SelectUserType() {
 
   const cards = [
     { title: "Owner", value: "owner" },
-    { title: "Tenant", value: "tenant" },
+    // { title: "Tenant", value: "tenant" },
     { title: "Security", value: "security" },
     { title: "User", value: "user" },
   ];
