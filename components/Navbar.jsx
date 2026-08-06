@@ -4,28 +4,35 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-
+import LoginModal from "./Models/LoginModal";
 export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [openLogin, setOpenLogin] = useState(false);
+  const [role, setRole] = useState("");
+  const isLoggedIn =
+  typeof window !== "undefined" && localStorage.getItem("token");
 
   const links = [
     {
       name: "Home",
       href: "/",
     },
-    {
-      name: "Admin",
-      href: "/admin",
-    },
+    
     {
       name: "Vehicle Lookup",
       href: "/vehicle-lookup",
     },
-    {
-      name: "Login",
-      href: "/login",
-    },
+    ,
+  isLoggedIn
+    ? {
+        name: "Logout",
+        href: "#",
+      }
+    : {
+        name: "Login",
+        href: "/login",
+      },
     {
       name: "Profile",
       href: "/profile",
@@ -45,29 +52,46 @@ export default function Navbar() {
 
         {/* Desktop Menu */}
         <nav className="hidden items-center gap-2 lg:flex">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`rounded-xl px-5 py-2 font-medium transition-all duration-300 ${
-                pathname === link.href
-                  ? "bg-blue-600 text-white shadow"
-                  : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
+         {links.map((link) =>
+  link.name === "Logout" ? (
+    <button
+      key={link.name}
+      onClick={() => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("resident");
+        window.location.href = "/";
+      }}
+      className="rounded-xl px-5 py-2 font-medium text-gray-700 transition-all duration-300 hover:bg-red-50 hover:text-red-600"
+    >
+      Logout
+    </button>
+  ) : (
+    <Link
+      key={link.href}
+      href={link.href}
+      className={`rounded-xl px-5 py-2 font-medium transition-all duration-300 ${
+        pathname === link.href
+          ? "bg-blue-600 text-white shadow"
+          : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+      }`}
+    >
+      {link.name}
+    </Link>
+  )
+)}
         </nav>
 
         {/* Register Button */}
         <div className="hidden lg:block">
-          <Link
-            href="/registration"
+          <button
+            onClick={() => {
+              setRole("Admin");
+              setOpenLogin(true);
+            }}
             className="rounded-xl bg-green-600 px-5 py-2.5 font-semibold text-white transition-all duration-300 hover:bg-green-700 hover:shadow-lg"
           >
-            Register Resident
-          </Link>
+            Admin Login
+          </button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -86,30 +110,57 @@ export default function Navbar() {
         }`}
       >
         <div className="space-y-2 border-t bg-white p-4">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setIsOpen(false)}
-              className={`block rounded-xl px-4 py-3 font-medium transition ${
-                pathname === link.href
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-700 hover:bg-blue-50"
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
-
-          <Link
-            href="/registration"
-            onClick={() => setIsOpen(false)}
-            className="mt-2 block rounded-xl bg-green-600 px-4 py-3 text-center font-semibold text-white transition hover:bg-green-700"
+         {links.map((link) =>
+  link.name === "Logout" ? (
+    <button
+      key={link.name}
+      onClick={() => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("resident");
+        window.location.href = "/";
+      }}
+      className="block w-full rounded-xl px-4 py-3 text-left font-medium text-red-600 hover:bg-red-50"
+    >
+      Logout
+    </button>
+  ) : (
+    <Link
+      key={link.href}
+      href={link.href}
+      onClick={() => setIsOpen(false)}
+      className={`block rounded-xl px-4 py-3 font-medium transition ${
+        pathname === link.href
+          ? "bg-blue-600 text-white"
+          : "text-gray-700 hover:bg-blue-50"
+      }`}
+    >
+      {link.name}
+    </Link>
+  )
+)}
+          <button
+            onClick={() => {
+              setRole("Admin");
+              setOpenLogin(true);
+            }}
+            className="rounded-xl bg-green-600 px-5 py-2.5 font-semibold text-white transition-all duration-300 hover:bg-green-700 hover:shadow-lg"
           >
-            Register Resident
-          </Link>
+            Admin Login
+          </button>
         </div>
       </div>
+      <LoginModal
+        open={openLogin}
+        role={role}
+        onClose={() => setOpenLogin(false)}
+        onSuccess={() => {
+          setOpenLogin(false);
+
+          if (role === "Admin") {
+            window.location.href = "/admin";
+          }
+        }}
+      />
     </header>
   );
 }
