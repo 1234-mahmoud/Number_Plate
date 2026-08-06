@@ -13,7 +13,7 @@ export default function Input({
     flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6">
       <label
         htmlFor={name}
-        className="w-50 lg:text-right whitespace-nowrap text-gray-700 font-semibold tracking-wide"
+        className="w-57 lg:text-right whitespace-nowrap text-gray-700 font-semibold tracking-wide"
       >
         {label_title}
       </label>

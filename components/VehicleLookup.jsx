@@ -1,176 +1,183 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { Camera, Car, UserPlus, CheckCircle, XCircle } from "lucide-react";
+import { Search, Car, UserPlus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import api from "@/Services/api";
 
 export default function VehicleLookup() {
-  const [resident, setResident] = useState(null);
+  const router = useRouter();
+
+  const [plate, setPlate] = useState("");
+  const [result, setResult] = useState(null);
+  const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  // Temporary plate number until camera integration
-  const plateNumber = "234";
+  const handleSearch = async () => {
+    if (!plate.trim()) return;
 
-  const handleCameraScan = async () => {
     try {
       setLoading(true);
-      setMessage("");
-      setResident(null);
+      setError("");
+      setResult(null);
+      setSearched(false);
 
-      const response = await api.get("/residents", {
-        params: {
-          plateNumber,
-        },
-      });
-
-      setResident(response.data.data.residents[0] || null);
-    } catch (error) {
-      setResident(null);
-      setMessage(error.response?.data?.message || "Resident not found.");
+      const response = await api.get(`/vehicles/?plateNumber=${plate}`);
+console.log(response.data)
+      setResult(response.data);
+      setSearched(true);
+    } catch (err) {
+      setResult(null);
+      setSearched(true);
+      setError(
+        err.response?.data?.message || "Vehicle not found."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 px-4 py-8 md:py-10">
-      <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl">
-        {/* Header */}
-        <div className="bg-linear-to-r from-blue-600 to-indigo-700 px-6 py-8 text-center text-white md:px-8">
-          <h2 className="text-2xl font-bold md:text-3xl">
-            Vehicle Verification
-          </h2>
+    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 py-10 px-4">
+      <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
 
-          <p className="mt-2 text-sm text-blue-100 md:text-base">
-            Security personnel can verify vehicles using the gate camera.
+        <div className="bg-linear-to-r from-blue-700 to-indigo-700 text-white p-8">
+          <h1 className="text-3xl font-bold">Vehicle Lookup</h1>
+
+          <p className="mt-2 text-blue-100">
+            Search using Plate Number
           </p>
         </div>
 
-        {/* Camera Section */}
-        <div className="px-5 py-8 md:px-8 md:py-10">
-          <div className="mx-auto flex w-full max-w-2xl flex-col items-center">
-            <div className="flex h-72 w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-slate-50">
-              <Camera className="h-16 w-16 text-gray-400 md:h-20 md:w-20" />
+        <div className="p-8">
 
-              <h3 className="mt-5 text-xl font-bold text-gray-800 md:text-2xl">
-                Camera Preview
-              </h3>
+          <div className="flex gap-4">
 
-              <p className="mt-2 px-4 text-center text-sm text-gray-500 md:text-base">
-                The gate camera will automatically detect the vehicle plate.
-              </p>
-            </div>
+            <input
+              type="text"
+              placeholder="Enter Plate Number"
+              value={plate}
+              onChange={(e) => setPlate(e.target.value)}
+              className="flex-1 rounded-xl border border-gray-300 px-4 py-3 outline-none focus:ring-4 focus:ring-blue-200"
+            />
 
             <button
-              onClick={handleCameraScan}
+              onClick={handleSearch}
               disabled={loading}
-              className="mt-8 w-full max-w-sm rounded-xl bg-blue-600 py-3.5 text-base font-semibold text-white transition hover:bg-blue-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-70 md:text-lg"
+              className="flex items-center gap-2 rounded-xl bg-blue-600 px-6 text-white hover:bg-blue-700 disabled:opacity-60"
             >
-              {loading ? "Scanning Vehicle..." : "Simulate Camera Scan"}
+              <Search size={20} />
+              {loading ? "Searching..." : "Search"}
             </button>
+
           </div>
-        </div>
 
-        {/* Error */}
-        {message && (
-          <div className="px-5 pb-8 md:px-8">
-            <div className="rounded-2xl border border-red-300 bg-red-50 p-6 text-center">
-              <XCircle className="mx-auto mb-4 h-14 w-14 text-red-600" />
+          {searched && result && (
 
-              <h3 className="text-xl font-bold text-red-700">
-                Vehicle Not Found
-              </h3>
+            <div className="mt-8 rounded-2xl border p-6 shadow">
 
-              <p className="mt-3 text-gray-600">{message}</p>
+              <div className="flex items-center gap-3 mb-6">
 
-              <p className="mt-2 text-sm text-gray-500">
-                Register the resident before allowing vehicle access.
-              </p>
-
-              <Link
-                href="/registration"
-                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-green-600 px-6 py-3 font-semibold text-white transition hover:bg-green-700"
-              >
-                <UserPlus size={20} />
-                Register Resident
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {/* Resident Data */}
-        {resident && (
-          <div className="border-t bg-gray-50 px-5 py-8 md:px-8">
-            <div className="mb-8 text-center">
-              <CheckCircle className="mx-auto mb-3 h-14 w-14 text-green-600" />
-
-              <h3 className="text-2xl font-bold text-gray-800">
-                Vehicle Verified Successfully
-              </h3>
-
-              <p className="mt-2 text-gray-500">
-                Resident information has been retrieved successfully.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border bg-white p-6 shadow-lg">
-              <div className="mb-6 flex items-center gap-3">
                 <Car className="text-blue-600" size={28} />
 
-                <h3 className="text-xl font-bold text-gray-800">
-                  Resident Information
-                </h3>
+                <h2 className="text-2xl font-bold">
+                  Vehicle Found
+                </h2>
+
               </div>
 
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                <InfoCard title="Resident Name" value={resident.name} />
+              <div className="grid md:grid-cols-2 gap-5">
 
-                <InfoCard title="Phone Number" value={resident.phone} />
+                <div>
+                  <span className="text-gray-500">Owner</span>
 
-                <InfoCard title="Plate Number" value={resident.plateNumber} />
-
-                <InfoCard title="Unit Number" value={resident.unit} />
-
-                <InfoCard title="License Number" value={resident.carLicense} />
-
-                <div className="rounded-xl border bg-slate-50 p-4">
-                  <p className="text-sm text-gray-500">Resident Type</p>
-
-                  <span
-                    className={`mt-2 inline-flex rounded-full px-4 py-2 text-sm font-semibold ${
-                      resident.residentType === "owner"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-blue-100 text-blue-700"
-                    }`}
-                  >
-                    {resident.residentType === "owner" ? "Owner" : "Tenant"}
-                  </span>
+                  <h3 className="font-semibold">
+                    {result.name}
+                  </h3>
                 </div>
+
+                <div>
+                  <span className="text-gray-500">Phone</span>
+
+                  <h3 className="font-semibold">
+                    {result.phone}
+                  </h3>
+                </div>
+
+                <div>
+                  <span className="text-gray-500">Unit</span>
+
+                  <h3 className="font-semibold">
+                    {result.unit}
+                  </h3>
+                </div>
+
+                <div>
+                  <span className="text-gray-500">Resident Type</span>
+
+                  <h3 className="font-semibold">
+                    {result.residentType}
+                  </h3>
+                </div>
+
+                <div>
+                  <span className="text-gray-500">Vehicle</span>
+
+                  <h3 className="font-semibold">
+                    {/* {result.data.vehicle.vehicleModel} */}
+                  </h3>
+                </div>
+
+                <div>
+                  <span className="text-gray-500">Color</span>
+
+                  <h3 className="font-semibold">
+                    {result.vehicleColor}
+                  </h3>
+                </div>
+
+                <div>
+                  <span className="text-gray-500">Plate Number</span>
+
+                  <h3 className="font-semibold">
+                    {result.plateNumber}
+                  </h3>
+                </div>
+
               </div>
 
-              <div className="mt-8 flex justify-center">
-                <div className="rounded-xl border border-green-300 bg-green-100 px-8 py-4 font-semibold text-green-700">
-                  ✅ Access Granted
-                </div>
-              </div>
             </div>
-          </div>
-        )}
+
+          )}
+
+          {searched && !result && (
+
+            <div className="mt-8 rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
+
+              <h2 className="text-2xl font-bold text-red-600">
+                Vehicle Not Found
+              </h2>
+
+              <p className="mt-3 text-gray-600">
+                {error}
+              </p>
+
+              <button
+                onClick={() => router.push("/registration")}
+                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-green-600 px-6 py-3 font-semibold text-white hover:bg-green-700"
+              >
+                <UserPlus size={20} />
+                Register New Resident
+              </button>
+
+            </div>
+
+          )}
+
+        </div>
+
       </div>
-    </div>
-  );
-}
-
-function InfoCard({ title, value }) {
-  return (
-    <div className="rounded-xl border bg-slate-50 p-4">
-      <p className="text-sm text-gray-500">{title}</p>
-
-      <h4 className="mt-1 wrap-break-word text-lg font-bold text-gray-800">
-        {value}
-      </h4>
     </div>
   );
 }

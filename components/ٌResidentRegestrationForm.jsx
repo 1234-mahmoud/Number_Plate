@@ -7,7 +7,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 import api from "@/Services/api";
 
-export default function RegistrationForm() {
+export default function ResidentRegestrationForm() {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -100,7 +100,7 @@ export default function RegistrationForm() {
           <div className="w-full max-w-3xl flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6">
             <label
               htmlFor="password"
-              className="w-50 lg:text-right whitespace-nowrap text-gray-700 font-semibold tracking-wide"
+              className="w-57 lg:text-right whitespace-nowrap text-gray-700 font-semibold tracking-wide"
             >
               Password
             </label>
@@ -115,26 +115,26 @@ export default function RegistrationForm() {
                 onChange={handleChange}
                 required
                 className="
-                w-full
-                rounded-xl
-                border
-                border-gray-300
-                bg-gray-50
-                px-4
-                py-3
-                pr-12
-                text-gray-800
-                text-base
-                outline-none
-                transition-all
-                duration-300
-                focus:border-blue-500
-                focus:bg-white
-                focus:ring-4
-                focus:ring-blue-200
-                hover:border-gray-400
-                shadow-sm
-              "
+        w-full
+        rounded-xl
+        border
+        border-gray-300
+        bg-gray-50
+        px-4
+        py-3
+        pr-12
+        text-gray-800
+        text-base
+        outline-none
+        transition-all
+        duration-300
+        focus:border-blue-500
+        focus:bg-white
+        focus:ring-4
+        focus:ring-blue-200
+        hover:border-gray-400
+        shadow-sm
+      "
               />
 
               <button
@@ -169,7 +169,7 @@ export default function RegistrationForm() {
           <div className="w-full max-w-3xl flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6">
             <label
               htmlFor="residentType"
-              className="w-50 lg:text-right whitespace-nowrap text-gray-700 font-semibold tracking-wide"
+              className="w-57 lg:text-right whitespace-nowrap text-gray-700 font-semibold tracking-wide"
             >
               Resident Type
             </label>
@@ -181,53 +181,52 @@ export default function RegistrationForm() {
               onChange={handleChange}
               required
               className="
-              w-full
-              rounded-xl
-              border
-              border-gray-300
-              bg-gray-50
-              px-4
-              py-3
-              text-gray-800
-              text-base
-              outline-none
-              transition-all
-              duration-300
-              focus:border-blue-500
-              focus:bg-white
-              focus:ring-4
-              focus:ring-blue-200
-              hover:border-gray-400
-              shadow-sm
-            "
+      w-full
+      rounded-xl
+      border
+      border-gray-300
+      bg-gray-50
+      px-4
+      py-3
+      text-gray-800
+      text-base
+      outline-none
+      transition-all
+      duration-300
+      focus:border-blue-500
+      focus:bg-white
+      focus:ring-4
+      focus:ring-blue-200
+      hover:border-gray-400
+      shadow-sm
+    "
             >
               <option value="">Select Resident Type</option>
               <option value="owner">Owner</option>
               <option value="tenant">Tenant</option>
             </select>
           </div>
-
           <button
             type="submit"
             disabled={loading}
             className="
-            mt-6
-            w-full
-            max-w-sm
-            rounded-xl
-            bg-blue-600
-            py-3.5
-            text-white
-            text-lg
-            font-semibold
-            transition-all
-            duration-300
-            hover:bg-blue-700
-            hover:shadow-xl
-            active:scale-95
-            disabled:opacity-70
-            disabled:cursor-not-allowed
-          "
+    mt-6
+    w-full
+    max-w-md
+    rounded-xl
+    bg-blue-600
+    py-3.5
+    text-white
+    text-lg
+    font-semibold
+    transition-all
+    duration-300
+    hover:bg-blue-700
+    hover:shadow-xl
+    active:scale-95
+    disabled:opacity-70
+    disabled:cursor-not-allowed
+  "
           >
             {loading ? "Creating Account..." : "Create Account"}
           </button>

@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Edit, Trash2, Plus } from "lucide-react";
 
-import EditVehicleModal from "@/components/EditVehicleModal";
-import DeleteVehicleModal from "@/components/DeleteVehicleModal";
+import EditVehicleModal from "@/components/Models/EditVehicleModal";
+import DeleteVehicleModal from "@/components/Models/DeleteVehicleModal";
 import api from "@/Services/api";
 
 export default function MyVehicles() {

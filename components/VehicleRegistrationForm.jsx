@@ -9,6 +9,7 @@ export default function VehicleRegistrationForm() {
   const [vehicles, setVehicles] = useState([
     {
       plateNumber: "",
+      plateChars:"",
       brand: "",
       model: "",
       color: "",
@@ -29,6 +30,7 @@ export default function VehicleRegistrationForm() {
       ...vehicles,
       {
         plateNumber: "",
+        plateChars:"",
         brand: "",
         model: "",
         color: "",
@@ -44,11 +46,11 @@ export default function VehicleRegistrationForm() {
 
  const handleSubmit = async (e) => {
   e.preventDefault();
-
+const plateNumber = `${vehicles[0].plateChars}${vehicles[0].plateNumber}`;
   try {
     console.log(vehicles)
     const response = await api.post("/vehicles", {
-      plateNumber: vehicles[0].plateNumber,
+      plateNumber,
       carLicense: vehicles[0].carLicense,
       brand: vehicles[0].brand,
       model: vehicles[0].model,
@@ -62,6 +64,7 @@ export default function VehicleRegistrationForm() {
     setVehicles([
       {
         plateNumber: "",
+        plateChars:"",
         brand: "",
         model: "",
         color: "",
@@ -137,6 +140,15 @@ export default function VehicleRegistrationForm() {
                   label_title="Plate Number"
                   input_type="text"
                   placeholder="Enter Plate Number"
+                  value={vehicle.plateNumber}
+                  handleCahnge={(e) => handleChange(index, e)}
+                />
+
+                 <Input
+                  name="plateChars"
+                  label_title="Plate Chars"
+                  input_type="text"
+                  placeholder="Enter Plate Chars"
                   value={vehicle.plateNumber}
                   handleCahnge={(e) => handleChange(index, e)}
                 />
