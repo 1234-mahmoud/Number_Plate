@@ -7,9 +7,9 @@ export default function SelectUserType() {
 
   const handleSelect = (type) => {
     switch (type) {
-      case "owner":
-        router.push("/profile");
-        break;
+      // case "owner":
+      //   router.push("/profile");
+      //   break;
 
       // case "tenant":
       //   router.push("/profile");
@@ -20,7 +20,7 @@ export default function SelectUserType() {
         break;
 
       case "user":
-        router.push("/guest");
+        router.push("/profile");
         break;
 
       default:
@@ -29,7 +29,7 @@ export default function SelectUserType() {
   };
 
   const cards = [
-    { title: "Owner", value: "owner" },
+    // { title: "Owner", value: "owner" },
     // { title: "Tenant", value: "tenant" },
     { title: "Security", value: "security" },
     { title: "User", value: "user" },
