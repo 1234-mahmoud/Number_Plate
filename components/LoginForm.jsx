@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Input from "@/utilites/Input";
 import api from "@/Services/api";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function LoginForm() {
 
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
-
+const [showPassword, setShowPassword] = useState(false);
   // Handle input change
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -78,15 +79,55 @@ export default function LoginForm() {
             value={formData.email}
             handleCahnge={handleChange}
           />
+<div className="w-full max-w-3xl flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6">
+  <label
+    htmlFor="password"
+    className="w-57 lg:text-right whitespace-nowrap text-gray-700 font-semibold tracking-wide"
+  >
+    Password
+  </label>
 
-          <Input
-            name="password"
-            label_title="Password"
-            input_type="password"
-            placeholder="Enter your password"
-            value={formData.password}
-            handleCahnge={handleChange}
-          />
+  <div className="relative w-full">
+    <input
+      id="password"
+      name="password"
+      type={showPassword ? "text" : "password"}
+      placeholder="Enter your password"
+      value={formData.password}
+      onChange={handleChange}
+      required
+      className="
+        w-full
+        rounded-xl
+        border
+        border-gray-300
+        bg-gray-50
+        px-4
+        py-3
+        pr-12
+        text-gray-800
+        text-base
+        outline-none
+        transition-all
+        duration-300
+        focus:border-blue-500
+        focus:bg-white
+        focus:ring-4
+        focus:ring-blue-200
+        hover:border-gray-400
+        shadow-sm
+      "
+    />
+
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600"
+    >
+      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+    </button>
+  </div>
+</div>
 
           <div className="w-full max-w-2xl flex justify-end">
             <Link
