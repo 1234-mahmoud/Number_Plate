@@ -10,10 +10,10 @@ export default function Input({
 }) {
   return (
     <div className="w-full max-w-3xl 
-    flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6">
+    flex flex-col items-start gap-2 md:gap-3">
       <label
         htmlFor={name}
-        className="w-57 lg:text-right whitespace-nowrap text-gray-700 font-semibold tracking-wide"
+        className="whitespace-nowrap text-gray-700 font-semibold tracking-wide"
       >
         {label_title}
       </label>

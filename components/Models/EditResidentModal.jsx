@@ -49,7 +49,7 @@ export default function EditResidentModal({
           />
 
           <div className="flex flex-col gap-3 md:flex-row md:items-center">
-            <label className="w-44 font-semibold text-gray-700">
+            <label className="font-semibold text-gray-700">
               Resident Type
             </label>
 

@@ -39,8 +39,8 @@ export default function EditEmployeeModal({
             handleCahnge={onChange}
           />
 
-          <div className="flex flex-col gap-3 md:flex-row md:items-center">
-            <label className="w-44 font-semibold text-gray-700">
+          <div className="flex flex-col gap-3">
+            <label className="font-semibold text-gray-700">
               Assigned Gate
             </label>
 

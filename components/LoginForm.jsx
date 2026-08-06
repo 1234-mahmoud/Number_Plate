@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Input from "@/utilites/Input";
 import api from "@/Services/api";
+import Input from "@/utilites/Input";
 import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginForm() {
@@ -17,8 +17,8 @@ export default function LoginForm() {
 
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
-const [showPassword, setShowPassword] = useState(false);
-  // Handle input change
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -26,14 +26,12 @@ const [showPassword, setShowPassword] = useState(false);
     }));
   };
 
-  // Handle login
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const response = await api.post("/auth/login", formData);
 
-      // Save returned data
       localStorage.setItem("token", response.data.token);
 
       if (response.data.user) {
@@ -53,11 +51,9 @@ const [showPassword, setShowPassword] = useState(false);
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 flex justify-center items-center px-4 py-10">
-      <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
-        {/* Header */}
-
-        <div className="bg-linear-to-r from-blue-600 to-indigo-700 text-white text-center py-8 px-5">
+    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-3xl overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl">
+        <div className="bg-linear-to-r from-blue-600 to-indigo-700 px-5 py-8 text-center text-white">
           <h2 className="text-3xl font-bold tracking-wide">Login</h2>
 
           <p className="mt-2 text-blue-100">
@@ -65,11 +61,9 @@ const [showPassword, setShowPassword] = useState(false);
           </p>
         </div>
 
-        {/* Form */}
-
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col items-center gap-6 px-8 py-10"
+          className="flex flex-col items-center gap-5 px-8 py-10"
         >
           <Input
             name="email"
@@ -79,60 +73,61 @@ const [showPassword, setShowPassword] = useState(false);
             value={formData.email}
             handleCahnge={handleChange}
           />
-<div className="w-full max-w-3xl flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6">
-  <label
-    htmlFor="password"
-    className="w-57 lg:text-right whitespace-nowrap text-gray-700 font-semibold tracking-wide"
-  >
-    Password
-  </label>
 
-  <div className="relative w-full">
-    <input
-      id="password"
-      name="password"
-      type={showPassword ? "text" : "password"}
-      placeholder="Enter your password"
-      value={formData.password}
-      onChange={handleChange}
-      required
-      className="
-        w-full
-        rounded-xl
-        border
-        border-gray-300
-        bg-gray-50
-        px-4
-        py-3
-        pr-12
-        text-gray-800
-        text-base
-        outline-none
-        transition-all
-        duration-300
-        focus:border-blue-500
-        focus:bg-white
-        focus:ring-4
-        focus:ring-blue-200
-        hover:border-gray-400
-        shadow-sm
-      "
-    />
+          <div className="w-full max-w-3xl flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6">
+            <label
+              htmlFor="password"
+              className="whitespace-nowrap text-gray-700 font-semibold tracking-wide"
+            >
+              Password
+            </label>
 
-    <button
-      type="button"
-      onClick={() => setShowPassword(!showPassword)}
-      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600"
-    >
-      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-    </button>
-  </div>
-</div>
+            <div className="relative w-full">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                className="
+                  w-full
+                  rounded-xl
+                  border
+                  border-gray-300
+                  bg-gray-50
+                  px-4
+                  py-3
+                  pr-12
+                  text-base
+                  text-gray-800
+                  shadow-sm
+                  outline-none
+                  transition-all
+                  duration-300
+                  hover:border-gray-400
+                  focus:border-blue-500
+                  focus:bg-white
+                  focus:ring-4
+                  focus:ring-blue-200
+                "
+              />
 
-          <div className="w-full max-w-2xl flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-blue-600"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+          </div>
+
+          <div className="w-full max-w-3xl flex justify-end -mt-2">
             <Link
               href="/forgot-password"
-              className="text-blue-600 hover:text-blue-700 hover:underline text-sm font-medium"
+              className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
             >
               Forgot Password?
             </Link>
@@ -141,46 +136,44 @@ const [showPassword, setShowPassword] = useState(false);
           <button
             type="submit"
             className="
-              mt-2
               w-full
-              max-w-sm
+              max-w-3xl
               rounded-xl
               bg-blue-600
               py-3.5
-              text-white
               text-lg
               font-semibold
+              text-white
               transition-all
               duration-300
               hover:bg-blue-700
               hover:shadow-xl
-              hover:-translate-y-1
-              active:scale-95
             "
           >
             Login
           </button>
 
-          <div className="text-center text-gray-600">
-            Don&apos;t have an account?
+          <div className="w-full max-w-3xl text-center pt-1">
+            <span className="text-gray-600">
+              Don&apos;t have an account?
+            </span>
+
             <Link
               href="/registration"
-              className="ml-2 text-blue-600 font-semibold hover:underline"
+              className="ml-2 font-semibold text-blue-600 hover:underline"
             >
               Register Now
             </Link>
           </div>
         </form>
 
-        {/* Status Message */}
-
         {message && (
           <div className="px-8 pb-8">
             <div
-              className={`rounded-xl px-4 py-3 text-center font-medium ${
+              className={`rounded-xl border px-4 py-3 text-center font-medium ${
                 messageType === "success"
-                  ? "bg-green-100 text-green-700 border border-green-300"
-                  : "bg-red-100 text-red-700 border border-red-300"
+                  ? "border-green-300 bg-green-100 text-green-700"
+                  : "border-red-300 bg-red-100 text-red-700"
               }`}
             >
               {message}
