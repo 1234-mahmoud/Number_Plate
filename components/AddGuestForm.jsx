@@ -39,7 +39,7 @@ export default function AddGuestForm() {
   <div className="w-full max-w-4xl overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl">
 
     {/* Header */}
-    <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-8 py-8 text-center text-white">
+    <div className="bg-linear-to-r from-blue-600 to-indigo-700 px-8 py-8 text-center text-white">
       <h1 className="text-3xl font-bold">
         Register Visitor
       </h1>
