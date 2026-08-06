@@ -1,12 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import {
-  User,
-  Car,
-  History,
-  LogOut,
-} from "lucide-react";
+import { User, Car, History, LogOut } from "lucide-react";
 
 export default function UserDashboard() {
   const router = useRouter();
@@ -48,12 +43,9 @@ export default function UserDashboard() {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 py-10 px-4">
-      <div className="max-w-7xl mx-auto">
-
-        <div className="rounded-3xl bg-linear-to-r from-blue-700 to-indigo-700 p-8 text-white shadow-xl mb-10">
-          <h1 className="text-4xl font-bold">
-            User Dashboard
-          </h1>
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-10 rounded-3xl bg-linear-to-r from-blue-700 to-indigo-700 p-8 text-white shadow-xl">
+          <h1 className="text-4xl font-bold">User Dashboard</h1>
 
           <p className="mt-2 text-blue-100">
             Welcome to the Compound Management System
@@ -67,27 +59,24 @@ export default function UserDashboard() {
               onClick={() =>
                 card.action ? card.action() : router.push(card.path)
               }
-              className="group overflow-hidden rounded-3xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              className="group rounded-3xl border border-gray-200 bg-white  shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
             >
               <div
-                className={`h-36 w-full bg-linear-to-r ${card.color} flex items-center justify-center text-white`}
+                className={`mb-6 flex h-32 items-center justify-center rounded-t-2xl bg-linear-to-r ${card.color} text-white shadow-md`}
               >
                 {card.icon}
               </div>
 
-              <div className="p-6 text-center">
-                <h2 className="text-2xl font-bold text-gray-800 transition group-hover:text-blue-600">
-                  {card.title}
-                </h2>
+              <h2 className="text-2xl font-bold text-gray-800 transition group-hover:text-blue-600">
+                {card.title}
+              </h2>
 
-                <p className="mt-3 text-sm text-gray-500">
-                  {card.desc}
-                </p>
-              </div>
+              <p className="mt-3 text-sm text-gray-500">
+                {card.desc}
+              </p>
             </button>
           ))}
         </div>
-
       </div>
     </div>
   );

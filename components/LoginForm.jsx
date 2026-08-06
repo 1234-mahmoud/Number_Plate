@@ -20,7 +20,7 @@ export default function SelectUserType() {
         break;
 
       case "user":
-        router.push("/profile");
+        router.push("/user_dashboard");
         break;
 
       default:
