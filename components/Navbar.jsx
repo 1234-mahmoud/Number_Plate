@@ -81,7 +81,7 @@ export default function Navbar() {
         </nav>
 
         {/* Register Button */}
-        <div className="hidden lg:block">
+        {/* <div className="hidden lg:block">
           <button
             onClick={() => {
               setRole("Admin");
@@ -91,7 +91,7 @@ export default function Navbar() {
           >
             Admin Login
           </button>
-        </div>
+        </div> */}
 
         {/* Mobile Menu Button */}
         <button
@@ -137,7 +137,7 @@ export default function Navbar() {
     </Link>
   )
 )}
-          <button
+          {/* <button
             onClick={() => {
               setRole("Admin");
               setOpenLogin(true);
@@ -145,7 +145,7 @@ export default function Navbar() {
             className="rounded-xl bg-green-600 px-5 py-2.5 font-semibold text-white transition-all duration-300 hover:bg-green-700 hover:shadow-lg"
           >
             Admin Login
-          </button>
+          </button> */}
         </div>
       </div>
     </header>

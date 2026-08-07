@@ -1,5 +1,5 @@
 import PermissionsManagement from "@/components/PermissionsManagement";
 
-export default function AdminPage() {
+export default function PermissionsManagementPage() {
   return <PermissionsManagement />;
 }
