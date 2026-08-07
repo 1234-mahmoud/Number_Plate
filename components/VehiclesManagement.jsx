@@ -174,7 +174,7 @@ export default function VehiclesManagement() {
 
           <div className="overflow-x-auto">
 
-            <table className="w-full min-w-[1000px]">
+            <table className="w-full min-w-250">
 
               <thead className="bg-gray-50">
 

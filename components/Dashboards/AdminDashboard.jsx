@@ -34,7 +34,7 @@ export default function AdminDashboard() {
       description: "Manage supervisors and security employees.",
       icon: <UserCog size={42} />,
       color: "from-green-600 to-emerald-700",
-      href: "/admin/security",
+      href: "/admin/security_staff",
     },
     {
       title: "Vehicles",
