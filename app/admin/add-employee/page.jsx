@@ -99,9 +99,9 @@ export default function AddEmployee() {
             handleCahnge={handleChange}
           />
 
-          <div className="w-full max-w-3xl flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6">
+          <div className="w-full max-w-3xl flex flex-col gap-2 md:gap-3">
 
-            <label className="w-50 lg:text-right whitespace-nowrap text-gray-700 font-semibold tracking-wide">
+            <label className="whitespace-nowrap text-gray-700 font-semibold tracking-wide">
               Assigned Gate
             </label>
 

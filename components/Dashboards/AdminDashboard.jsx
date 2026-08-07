@@ -74,13 +74,13 @@ export default function AdminDashboard() {
       href: "/admin/add-employee",
       color: "bg-green-600 hover:bg-green-700",
     },
-    {
-      title: "System Settings",
-      description: "Manage general system settings.",
-      icon: <Settings size={22} />,
-      href: "/admin/settings",
-      color: "bg-gray-700 hover:bg-gray-800",
-    },
+    // {
+    //   title: "System Settings",
+    //   description: "Manage general system settings.",
+    //   icon: <Settings size={22} />,
+    //   href: "/admin/settings",
+    //   color: "bg-gray-700 hover:bg-gray-800",
+    // },
   ];
 
   const recentActivities = [
