@@ -6,106 +6,147 @@ import Input from "@/utilites/Input";
 import api from "@/Services/api";
 
 export default function VehicleRegistrationForm() {
-  const [vehicles, setVehicles] = useState([
-    {
-      plateNumber: "",
-      plateChars:"",
-      brand: "",
-      model: "",
-      color: "",
-      carLicense: "",
-    },
-  ]);
+  const createEmptyVehicle = () => ({
+    plateChar1: "",
+    plateChar2: "",
+    plateChar3: "",
+    plateNumber: "",
+    brand: "",
+    model: "",
+    color: "",
+    carLicense: "",
+  });
+
+  const [vehicles, setVehicles] = useState([createEmptyVehicle()]);
 
   const handleChange = (index, e) => {
-    const updatedVehicles = [...vehicles];
+    const { name, value } = e.target;
 
-    updatedVehicles[index][e.target.name] = e.target.value;
+    let newValue = value;
 
-    setVehicles(updatedVehicles);
+    // Plate characters: letters only + uppercase
+    if (
+      name === "plateChar1" ||
+      name === "plateChar2" ||
+      name === "plateChar3"
+    ) {
+      newValue = value
+        .replace(/[^a-zA-Z\u0600-\u06FF]/g, "")
+        .toUpperCase()
+        .slice(0, 1);
+    }
+
+    // Plate number: numbers only
+    if (name === "plateNumber") {
+      newValue = value.replace(/\D/g, "");
+    }
+
+    setVehicles((prev) =>
+      prev.map((vehicle, vehicleIndex) =>
+        vehicleIndex === index
+          ? {
+              ...vehicle,
+              [name]: newValue,
+            }
+          : vehicle,
+      ),
+    );
+
+    // Move cursor to the next plate input
+    if (
+      newValue.length === 1 &&
+      (name === "plateChar1" || name === "plateChar2" || name === "plateChar3")
+    ) {
+      const nextInput = document.getElementById(
+        `${
+          name === "plateChar1"
+            ? "plateChar2"
+            : name === "plateChar2"
+              ? "plateChar3"
+              : "plateNumber"
+        }-${index}`,
+      );
+
+      nextInput?.focus();
+    }
+  };
+
+  const handlePlateKeyDown = (index, e) => {
+    if (e.key !== "Backspace" || e.target.value) return;
+
+    const previousInput = {
+      plateChar2: "plateChar1",
+      plateChar3: "plateChar2",
+      plateNumber: "plateChar3",
+    }[e.target.name];
+
+    if (previousInput) {
+      const input = document.getElementById(`${previousInput}-${index}`);
+
+      input?.focus();
+    }
   };
 
   const addVehicle = () => {
-    setVehicles([
-      ...vehicles,
-      {
-        plateNumber: "",
-        plateChars:"",
-        brand: "",
-        model: "",
-        color: "",
-        carLicense: "",
-      },
-    ]);
+    setVehicles((prev) => [...prev, createEmptyVehicle()]);
   };
 
   const removeVehicle = (index) => {
-    const updatedVehicles = vehicles.filter((_, i) => i !== index);
-    setVehicles(updatedVehicles);
+    setVehicles((prev) =>
+      prev.filter((_, vehicleIndex) => vehicleIndex !== index),
+    );
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-const plateNumber = `${vehicles[0].plateChars}${vehicles[0].plateNumber}`;
-  try {
-    console.log(vehicles)
-    const response = await api.post("/vehicles", {
-      plateNumber,
-      carLicense: vehicles[0].carLicense,
-      brand: vehicles[0].brand,
-      model: vehicles[0].model,
-      color: vehicles[0].color,
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    console.log(response.data);
+    try {
+      for (const vehicle of vehicles) {
+        const plateNumber = `${vehicle.plateChar1}${vehicle.plateChar2}${vehicle.plateChar3}${vehicle.plateNumber}`;
 
-    alert("Vehicle registered successfully");
+        await api.post("/vehicles", {
+          plateNumber,
+          carLicense: vehicle.carLicense,
+          brand: vehicle.brand,
+          model: vehicle.model,
+          color: vehicle.color,
+        });
+      }
 
-    setVehicles([
-      {
-        plateNumber: "",
-        plateChars:"",
-        brand: "",
-        model: "",
-        color: "",
-        carLicense: "",
-      },
-    ]);
+      alert("Vehicle(s) registered successfully.");
 
-  } catch (error) {
-    console.log(error.response?.data || error.message);
-    alert("Failed to register vehicle");
-  }
-};
+      setVehicles([createEmptyVehicle()]);
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+      alert("Failed to register vehicle.");
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 flex justify-center items-center px-4 py-10">
-      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 px-4 py-10">
+      <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl">
         {/* Header */}
-
-        <div className="bg-linear-to-r from-blue-600 to-indigo-700 text-white text-center py-8 px-5">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-wide">
+        <div className="bg-linear-to-r from-blue-600 to-indigo-700 px-5 py-8 text-center text-white">
+          <h2 className="text-2xl font-bold tracking-wide sm:text-3xl">
             Vehicle Registration
           </h2>
 
-          <p className="mt-2 text-blue-100 text-sm sm:text-base">
+          <p className="mt-2 text-sm text-blue-100 sm:text-base">
             Register one or more vehicles linked to your account.
           </p>
         </div>
 
         {/* Form */}
-
-        <form onSubmit={handleSubmit} className="px-5 sm:px-8 py-8">
+        <form onSubmit={handleSubmit} className="px-5 py-8 sm:px-8">
           {vehicles.map((vehicle, index) => (
             <div
               key={index}
               className="mb-8 rounded-3xl border border-gray-200 bg-gray-50 p-6 shadow-sm"
             >
               {/* Card Header */}
-
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+              <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 p-3 rounded-xl">
+                  <div className="rounded-xl bg-blue-100 p-3">
                     <Car className="text-blue-600" size={24} />
                   </div>
 
@@ -114,7 +155,7 @@ const plateNumber = `${vehicles[0].plateChars}${vehicles[0].plateNumber}`;
                       Vehicle #{index + 1}
                     </h3>
 
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-sm text-gray-500">
                       Enter vehicle information.
                     </p>
                   </div>
@@ -124,7 +165,7 @@ const plateNumber = `${vehicles[0].plateChars}${vehicles[0].plateNumber}`;
                   <button
                     type="button"
                     onClick={() => removeVehicle(index)}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-white font-medium transition hover:bg-red-700"
+                    className="flex items-center justify-center gap-2 rounded-xl bg-red-600 px-5 py-3 font-medium text-white transition hover:bg-red-700"
                   >
                     <Trash2 size={18} />
                     Remove
@@ -133,25 +174,161 @@ const plateNumber = `${vehicles[0].plateChars}${vehicles[0].plateNumber}`;
               </div>
 
               {/* Inputs */}
-
               <div className="flex flex-col gap-5">
-                <Input
-                  name="plateNumber"
-                  label_title="Plate Number"
-                  input_type="text"
-                  placeholder="Enter Plate Number"
-                  value={vehicle.plateNumber}
-                  handleCahnge={(e) => handleChange(index, e)}
-                />
+                {/* Plate Number */}
+                <div className="w-full max-w-3xl">
+                  <label className="mb-2 block whitespace-nowrap font-semibold tracking-wide text-gray-700">
+                    Plate Number
+                  </label>
 
-                 <Input
-                  name="plateChars"
-                  label_title="Plate Chars"
-                  input_type="text"
-                  placeholder="Enter Plate Chars"
-                  value={vehicle.plateNumber}
-                  handleCahnge={(e) => handleChange(index, e)}
-                />
+                  <div className="flex w-full gap-2 sm:gap-3">
+                    {/* Character 1 */}
+                    <input
+                      id={`plateChar1-${index}`}
+                      name="plateChar1"
+                      type="text"
+                      inputMode="text"
+                      maxLength={1}
+                      autoComplete="off"
+                      value={vehicle.plateChar1}
+                      onChange={(e) => handleChange(index, e)}
+                      onKeyDown={(e) => handlePlateKeyDown(index, e)}
+                      className="
+                        h-12
+                        w-12
+                        rounded-xl
+                        border
+                        border-gray-300
+                        bg-gray-50
+                        text-center
+                        text-lg
+                        font-semibold
+                        uppercase
+                        text-gray-800
+                        shadow-sm
+                        outline-none
+                        transition-all
+                        focus:border-blue-500
+                        focus:bg-white
+                        focus:ring-4
+                        focus:ring-blue-200
+                        sm:h-14
+                        sm:w-14
+                      "
+                    />
+
+                    {/* Character 2 */}
+                    <input
+                      id={`plateChar2-${index}`}
+                      name="plateChar2"
+                      type="text"
+                      inputMode="text"
+                      maxLength={1}
+                      autoComplete="off"
+                      value={vehicle.plateChar2}
+                      onChange={(e) => handleChange(index, e)}
+                      onKeyDown={(e) => handlePlateKeyDown(index, e)}
+                      className="
+                        h-12
+                        w-12
+                        rounded-xl
+                        border
+                        border-gray-300
+                        bg-gray-50
+                        text-center
+                        text-lg
+                        font-semibold
+                        uppercase
+                        text-gray-800
+                        shadow-sm
+                        outline-none
+                        transition-all
+                        focus:border-blue-500
+                        focus:bg-white
+                        focus:ring-4
+                        focus:ring-blue-200
+                        sm:h-14
+                        sm:w-14
+                      "
+                    />
+
+                    {/* Character 3 */}
+                    <input
+                      id={`plateChar3-${index}`}
+                      name="plateChar3"
+                      type="text"
+                      inputMode="text"
+                      maxLength={1}
+                      autoComplete="off"
+                      value={vehicle.plateChar3}
+                      onChange={(e) => handleChange(index, e)}
+                      onKeyDown={(e) => handlePlateKeyDown(index, e)}
+                      className="
+                        h-12
+                        w-12
+                        rounded-xl
+                        border
+                        border-gray-300
+                        bg-gray-50
+                        text-center
+                        text-lg
+                        font-semibold
+                        uppercase
+                        text-gray-800
+                        shadow-sm
+                        outline-none
+                        transition-all
+                        focus:border-blue-500
+                        focus:bg-white
+                        focus:ring-4
+                        focus:ring-blue-200
+                        sm:h-14
+                        sm:w-14
+                      "
+                    />
+
+                    {/* Plate Numbers */}
+                    <input
+                      id={`plateNumber-${index}`}
+                      name="plateNumber"
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      autoComplete="off"
+                      value={vehicle.plateNumber}
+                      onChange={(e) => handleChange(index, e)}
+                      onKeyDown={(e) => handlePlateKeyDown(index, e)}
+                      placeholder="1234"
+                      className="
+                        h-12
+                        min-w-0
+                        flex-1
+                        rounded-xl
+                        border
+                        border-gray-300
+                        bg-gray-50
+                        px-4
+                        text-center
+                        text-lg
+                        font-semibold
+                        tracking-widest
+                        text-gray-800
+                        shadow-sm
+                        outline-none
+                        transition-all
+                        focus:border-blue-500
+                        focus:bg-white
+                        focus:ring-4
+                        focus:ring-blue-200
+                        sm:h-14
+                      "
+                    />
+                  </div>
+
+                  <p className="mt-2 text-sm text-gray-500">
+                    Enter 3 letters followed by the plate numbers.
+                  </p>
+                </div>
 
                 <Input
                   name="brand"
@@ -193,8 +370,7 @@ const plateNumber = `${vehicles[0].plateChars}${vehicles[0].plateNumber}`;
           ))}
 
           {/* Buttons */}
-
-          <div className="flex flex-col sm:flex-row justify-center gap-5 mt-10">
+          <div className="mt-10 flex flex-col justify-center gap-5 sm:flex-row">
             <button
               type="button"
               onClick={addVehicle}
@@ -207,14 +383,14 @@ const plateNumber = `${vehicles[0].plateChars}${vehicles[0].plateNumber}`;
                 bg-green-600
                 px-8
                 py-4
-                text-white
                 text-lg
                 font-semibold
+                text-white
                 transition-all
                 duration-300
+                hover:-translate-y-1
                 hover:bg-green-700
                 hover:shadow-xl
-                hover:-translate-y-1
                 active:scale-95
               "
             >
@@ -229,14 +405,14 @@ const plateNumber = `${vehicles[0].plateChars}${vehicles[0].plateNumber}`;
                 bg-blue-600
                 px-10
                 py-4
-                text-white
                 text-lg
                 font-semibold
+                text-white
                 transition-all
                 duration-300
+                hover:-translate-y-1
                 hover:bg-blue-700
                 hover:shadow-xl
-                hover:-translate-y-1
                 active:scale-95
               "
             >

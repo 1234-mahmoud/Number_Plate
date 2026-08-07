@@ -22,7 +22,7 @@ export default function LoginForm() {
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value.trim().toLowerCase(),
     }));
   };
 
@@ -63,11 +63,11 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-slate-200 flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-3xl overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl">
 
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-8 text-center text-white">
+        <div className="bg-linear-to-r from-blue-600 to-indigo-700 px-6 py-8 text-center text-white">
           <h1 className="text-3xl font-bold tracking-wide">
             Login
           </h1>
