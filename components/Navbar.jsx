@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import LoginModal from "./Models/LoginModal";
 export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -149,18 +148,6 @@ export default function Navbar() {
           </button>
         </div>
       </div>
-      <LoginModal
-        open={openLogin}
-        role={role}
-        onClose={() => setOpenLogin(false)}
-        onSuccess={() => {
-          setOpenLogin(false);
-
-          if (role === "Admin") {
-            window.location.href = "/admin";
-          }
-        }}
-      />
     </header>
   );
 }
