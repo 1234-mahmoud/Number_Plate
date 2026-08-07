@@ -150,6 +150,9 @@ export default function VehicleRegistrationForm() {
             const numbers = vehicle.plate.slice(3);
             const isFocused = focusedIndex === index;
 
+            // once 3 letters are entered, switch the keyboard to numeric
+            const isNumbersStage = vehicle.plate.length >= 3;
+
             return (
               <div
                 key={index}
@@ -199,8 +202,10 @@ export default function VehicleRegistrationForm() {
                           hiddenPlateRefs.current[index] = element;
                         }}
                         type="text"
-                        inputMode="text"
-                        autoComplete="on"
+                        // dynamic keyboard: alphabetic while typing letters, numeric once letters are done
+                        inputMode={isNumbersStage ? "numeric" : "text"}
+                        pattern={isNumbersStage ? "[0-9]*" : undefined}
+                        autoComplete="off"
                         autoCapitalize="characters"
                         value={vehicle.plate}
                         onChange={(e) => handlePlateChange(index, e)}
@@ -239,7 +244,8 @@ export default function VehicleRegistrationForm() {
 
                         {/* Numbers */}
                         <div
-                          className={`flex h-14 min-w-0 flex-1 items-center justify-center rounded-xl border px-4 text-xl font-bold tracking-widest text-gray-800 shadow-sm transition-colors
+                          className={`flex h-14 min-w-0 flex-1 items-center justify-center rounded-xl border px-4 text-xl 
+                            font-bold tracking-widest text-gray-800 shadow-sm transition-colors
                             ${
                               isFocused && vehicle.plate.length >= 3
                                 ? "border-blue-600 ring-2 ring-blue-300 bg-blue-50"
