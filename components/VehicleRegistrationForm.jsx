@@ -40,7 +40,7 @@ export default function VehicleRegistrationForm() {
     }
 
     // adjust max plate-number length if needed
-    numbers = numbers.slice(0, 6);
+    numbers = numbers.slice(0, 4);
 
     const value = letters + numbers;
 
