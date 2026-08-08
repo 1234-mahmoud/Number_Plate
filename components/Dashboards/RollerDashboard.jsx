@@ -30,7 +30,7 @@ export default function RollerDashboard() {
       description: "Manage registered employee vehicles.",
       icon: <Car size={42} />,
       color: "from-green-600 to-emerald-700",
-      path: "/employee-cars",
+      path: "/roller/employee_cars",
       permission: "view_employee_cars",
     },
     {
@@ -46,7 +46,7 @@ export default function RollerDashboard() {
       description: "Record a vehicle entering the compound.",
       icon: <LogIn size={42} />,
       color: "from-cyan-600 to-blue-700",
-      path: "/entry",
+      path: "/roller/entry",
       permission: "register_entry",
     },
     {
@@ -54,7 +54,7 @@ export default function RollerDashboard() {
       description: "Record a vehicle leaving the compound.",
       icon: <LogOut size={42} />,
       color: "from-orange-500 to-red-600",
-      path: "/exit",
+      path: "/roller/exit",
       permission: "register_exit",
     },
     {
@@ -62,7 +62,7 @@ export default function RollerDashboard() {
       description: "View vehicle entry and exit records.",
       icon: <History size={42} />,
       color: "from-yellow-500 to-orange-600",
-      path: "/history",
+      path: "/roller/history",
       permission: "view_history",
     },
     {
@@ -70,7 +70,7 @@ export default function RollerDashboard() {
       description: "Register a new user in the system.",
       icon: <UserPlus size={42} />,
       color: "from-teal-600 to-green-700",
-      path: "/users/add",
+      path: "/registration",
       permission: "add_users",
     },
     {
