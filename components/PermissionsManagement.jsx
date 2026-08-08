@@ -16,8 +16,15 @@ export default function PermissionsManagement() {
     Owner: {
       viewProfile: true,
       editProfile: true,
+
       manageVehicles: true,
+
       viewHistory: true,
+
+      addFamilyMembers: true,
+      editFamilyMembers: true,
+      removeFamilyMembers: true,
+
       viewUsers: false,
       manageUsers: false,
       managePermissions: false,
@@ -26,9 +33,17 @@ export default function PermissionsManagement() {
     Security: {
       viewProfile: true,
       editProfile: false,
-      manageVehicles: false,
+
+      vehicleLookup: true,
+      viewUserInformation: true,
+
+      registerEntry: true,
+      registerExit: true,
+
       viewHistory: true,
-      viewUsers: true,
+
+      manageEmployeeCars: false,
+
       manageUsers: false,
       managePermissions: false,
     },
@@ -36,9 +51,17 @@ export default function PermissionsManagement() {
     Roller: {
       viewProfile: true,
       editProfile: false,
-      manageVehicles: false,
+
+      vehicleLookup: true,
+      viewUserInformation: true,
+
+      manageEmployeeCars: true,
+
+      registerEntry: true,
+      registerExit: true,
+
       viewHistory: true,
-      viewUsers: false,
+
       manageUsers: false,
       managePermissions: false,
     },
@@ -46,29 +69,55 @@ export default function PermissionsManagement() {
 
   const permissionLabels = {
     viewProfile: "View Profile",
+
     editProfile: "Edit Profile",
+
     manageVehicles: "Manage Vehicles",
+
     viewHistory: "View Entry & Exit History",
+
+    addFamilyMembers: "Add Family Members",
+
+    editFamilyMembers: "Edit Family Members",
+
+    removeFamilyMembers: "Remove Family Members",
+
+    vehicleLookup: "Vehicle Lookup",
+
+    viewUserInformation: "View User Information",
+
+    manageEmployeeCars: "Manage Employee Cars",
+
+    registerEntry: "Register Vehicle Entry",
+
+    registerExit: "Register Vehicle Exit",
+
     viewUsers: "View Users",
+
     manageUsers: "Manage Users",
+
     managePermissions: "Manage Permissions",
   };
 
   const handlePermissionChange = (permission) => {
     setPermissions((prev) => ({
       ...prev,
+
       [selectedRole]: {
         ...prev[selectedRole],
+
         [permission]: !prev[selectedRole][permission],
       },
     }));
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-slate-200 px-4 py-8">
+
       <div className="mx-auto max-w-7xl">
 
         {/* Header */}
+
         <div className="mb-8">
 
           <Link
@@ -86,6 +135,7 @@ export default function PermissionsManagement() {
             </div>
 
             <div>
+
               <h1 className="text-3xl font-bold text-gray-800">
                 Roles & Permissions
               </h1>
@@ -93,15 +143,19 @@ export default function PermissionsManagement() {
               <p className="mt-1 text-gray-500">
                 Manage permissions for each user role.
               </p>
+
             </div>
 
           </div>
+
         </div>
 
         {/* Main */}
+
         <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
 
           {/* Roles */}
+
           <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-lg">
 
             <h2 className="mb-4 text-lg font-bold text-gray-800">
@@ -111,6 +165,7 @@ export default function PermissionsManagement() {
             <div className="space-y-3">
 
               {Object.keys(permissions).map((role) => (
+
                 <button
                   key={role}
                   type="button"
@@ -123,6 +178,7 @@ export default function PermissionsManagement() {
                 >
                   {role}
                 </button>
+
               ))}
 
             </div>
@@ -130,6 +186,7 @@ export default function PermissionsManagement() {
           </div>
 
           {/* Permissions */}
+
           <div className="rounded-3xl border border-gray-200 bg-white shadow-lg">
 
             <div className="border-b border-gray-200 px-6 py-5">
@@ -146,18 +203,22 @@ export default function PermissionsManagement() {
 
             <div className="divide-y divide-gray-100">
 
-              {Object.entries(permissionLabels).map(
-                ([permission, label]) => {
-                  const enabled =
-                    permissions[selectedRole][permission];
+              {Object.entries(permissions[selectedRole]).map(
+                ([permission, enabled]) => {
+
+                  const label =
+                    permissionLabels[permission] ||
+                    permission;
 
                   return (
+
                     <div
                       key={permission}
                       className="flex items-center justify-between gap-4 px-6 py-5"
                     >
 
                       <div>
+
                         <h3 className="font-semibold text-gray-800">
                           {label}
                         </h3>
@@ -167,6 +228,7 @@ export default function PermissionsManagement() {
                             ? "This role has access to this feature."
                             : "This role does not have access to this feature."}
                         </p>
+
                       </div>
 
                       <button
@@ -188,6 +250,7 @@ export default function PermissionsManagement() {
                               : "translate-x-0"
                           }`}
                         >
+
                           {enabled ? (
                             <Check
                               size={17}
@@ -199,11 +262,13 @@ export default function PermissionsManagement() {
                               className="text-gray-500"
                             />
                           )}
+
                         </span>
 
                       </button>
 
                     </div>
+
                   );
                 }
               )}
@@ -211,6 +276,7 @@ export default function PermissionsManagement() {
             </div>
 
             {/* Footer */}
+
             <div className="flex flex-col gap-3 border-t border-gray-200 px-6 py-5 sm:flex-row sm:justify-end">
 
               <button
@@ -230,6 +296,7 @@ export default function PermissionsManagement() {
         </div>
 
       </div>
+
     </div>
   );
 }
