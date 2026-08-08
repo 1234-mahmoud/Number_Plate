@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { User, Car, History, LogOut } from "lucide-react";
+import { User,Users, Car, History, LogOut } from "lucide-react";
 
 export default function UserDashboard() {
   const router = useRouter();
@@ -14,6 +14,13 @@ export default function UserDashboard() {
       color: "from-blue-600 to-indigo-700",
       path: "/profile",
     },
+    {
+  title: "Family Members",
+  description: "Manage family members linked to your unit.",
+  icon: <Users size={42} />,
+  color: "from-purple-600 to-indigo-700",
+  path: "/owner/family_members",
+},
     {
       title: "My Vehicles",
       desc: "Manage your registered vehicles",
